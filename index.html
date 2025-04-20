@@ -1,6 +1,12 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
+    <script>
+    // Verifica se há token ao carregar a página
+    if (!sessionStorage.getItem('authToken') && !window.location.pathname.includes('index.html')) {
+        window.location.href = 'index.html';
+    }
+</script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>INRB - Login</title>
