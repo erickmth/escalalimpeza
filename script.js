@@ -1,9 +1,10 @@
 // Configuração da API
 const API_URL = 'https://erickmth.pythonanywhere.com/api';
 
-// Variável global para armazenar os dados temporariamente
-let currentUser = null;
+// Variável para armazenar o token temporariamente
+let authToken = sessionStorage.getItem('authToken') || null;
 
+// Função para fazer login
 async function login(event) {
     event.preventDefault();
     
@@ -22,18 +23,14 @@ async function login(event) {
         const data = await response.json();
         
         if (data.success) {
-            // Armazena em memória (não na URL)
-            currentUser = {
-                nome: data.nome,
-                turma: data.turma
-            };
+            // Armazena o token no sessionStorage
+            authToken = data.token;
+            sessionStorage.setItem('authToken', authToken);
             
-            // Redireciona SEM parâmetros na URL
-            if (data.turma === 'Formare 2025') {
-                window.location.href = 'formare.html';
-            } else {
-                window.location.href = 'aprender.html';
-            }
+            // Redireciona para a página correta
+            window.location.href = data.turma === 'Formare 2025' 
+                ? 'formare.html' 
+                : 'aprender.html';
         } else {
             alert('EDV ou turma incorretos');
         }
@@ -45,48 +42,88 @@ async function login(event) {
 
 // Função para verificar autenticação
 async function checkAuth() {
-    // Se não tem usuário na memória, volta para login
-    if (!currentUser) {
-        window.location.href = 'index.html';
-        return false;
-    }
+    if (!authToken) return false;
     
-    // Verifica no servidor se a sessão ainda é válida
     try {
         const response = await fetch(`${API_URL}/verify`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ 
-                turma: currentUser.turma,
-                nome: currentUser.nome 
-            }),
+            body: JSON.stringify({ token: authToken }),
         });
         
-        return response.ok;
+        const data = await response.json();
+        
+        if (data.success) {
+            return data; // Retorna os dados do usuário
+        }
     } catch (error) {
-        return false;
+        console.error('Erro ao verificar token:', error);
     }
+    
+    // Se falhar, limpa o token
+    sessionStorage.removeItem('authToken');
+    authToken = null;
+    return false;
 }
 
-// Modifique o event listener
+// Função para logout
+function logout() {
+    sessionStorage.removeItem('authToken');
+    authToken = null;
+    window.location.href = 'index.html';
+}
+
+// Inicialização da página
 document.addEventListener('DOMContentLoaded', async function() {
+    // Configura botão de logout
+    const logoutBtn = document.getElementById('logoutBtn');
+    if (logoutBtn) logoutBtn.addEventListener('click', logout);
+    
     // Página de login
-    if (window.location.pathname.endsWith('index.html')) {
-        document.getElementById('loginForm').addEventListener('submit', login);
+    if (window.location.pathname.includes('index.html')) {
+        // Se já estiver logado, redireciona
+        if (await checkAuth()) {
+            const userData = await checkAuth();
+            window.location.href = userData.turma === 'Formare 2025' 
+                ? 'formare.html' 
+                : 'aprender.html';
+        }
         return;
     }
     
     // Páginas internas
-    if (!await checkAuth()) {
+    const userData = await checkAuth();
+    if (!userData) {
         window.location.href = 'index.html';
         return;
     }
     
     // Mostra os dados do usuário
-    document.getElementById('welcome').textContent = `Bem-vindo(a), ${currentUser.nome}`;
+    document.getElementById('welcome').textContent = `Bem-vindo(a), ${userData.nome}`;
     
     // Carrega a escala
-    loadScheduleData(currentUser.turma);
+    if (window.location.pathname.includes('formare.html')) {
+        loadScheduleData('Formare 2025');
+    } else if (window.location.pathname.includes('aprender.html')) {
+        loadScheduleData('Aprender A+ 2025');
+    }
 });
+
+// Função para carregar a escala (atualizada para enviar o token)
+async function loadScheduleData(turma) {
+    try {
+        const response = await fetch(`${API_URL}/escala/${encodeURIComponent(turma)}?token=${authToken}`);
+        const data = await response.json();
+        
+        if (data.error) {
+            throw new Error(data.error);
+        }
+        
+        // ... (restante do código da função)
+    } catch (error) {
+        console.error('Erro:', error);
+        alert('Erro ao carregar dados. Tente novamente.');
+    }
+}
