@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>INRB - Aprender A+ 2025</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <a href="index.html" class="logo-link">
+            <img src="logo.svg" alt="INRB Logo" class="logo">
+        </a>
+        
+        <div class="header">
+            <h1>Aprender A+ 2025</h1>
+            <div id="welcome" class="welcome"></div>
+        </div>
+        
+        <div class="content">
+            <div class="week-info">
+                <h2>Semana Atual: <span id="currentWeek"></span></h2>
+            </div>
+            
+            <div class="schedule">
+                <h3>Escala de Limpeza</h3>
+                <table id="scheduleTable">
+                    <thead>
+                        <tr>
+                            <th>Semana</th>
+                            <th>Dupla</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Preenchido pelo JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+    <script>
+        // Carrega os dados específicos da turma Aprender A+
+        document.addEventListener('DOMContentLoaded', function() {
+            const userData = JSON.parse(localStorage.getItem('userData'));
+            if (!userData || userData.turma !== 'Aprender A+ 2025') {
+                window.location.href = 'index.html';
+                return;
+            }
+            
+            document.getElementById('welcome').textContent = `Bem-vindo(a), ${userData.nome}`;
+            loadScheduleData('Aprender A+ 2025');
+        });
+    </script>
+</body>
+</html>

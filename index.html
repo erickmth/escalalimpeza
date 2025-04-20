@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>INRB - Escala de Limpeza</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <a href="index.html" class="logo-link">
+            <img src="logo.svg" alt="INRB Logo" class="logo">
+        </a>
+        
+        <div class="login-box">
+            <h1>Login</h1>
+            
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="turma">Turma:</label>
+                    <select id="turma" name="turma" required>
+                        <option value="" disabled selected>Selecione sua turma</option>
+                        <option value="Formare 2025">Formare 2025</option>
+                        <option value="Aprender A+ 2025">Aprender A+ 2025</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="edv">EDV:</label>
+                    <input type="text" id="edv" name="edv" placeholder="Digite seu EDV" required>
+                </div>
+                
+                <button type="submit" class="btn">Entrar</button>
+            </form>
+            
+            <div id="message" class="message"></div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
