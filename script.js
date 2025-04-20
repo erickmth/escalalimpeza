@@ -1,13 +1,14 @@
 // Configuração da API
 const API_URL = 'https://erickmth.pythonanywhere.com/api';
 
-// Função para fazer login
+// Variável global para armazenar os dados temporariamente
+let currentUser = null;
+
 async function login(event) {
     event.preventDefault();
     
     const turma = document.getElementById('turma').value;
     const edv = document.getElementById('edv').value;
-    const messageEl = document.getElementById('message');
     
     try {
         const response = await fetch(`${API_URL}/login`, {
@@ -21,103 +22,71 @@ async function login(event) {
         const data = await response.json();
         
         if (data.success) {
-            // Redireciona imediatamente SEM salvar no storage
+            // Armazena em memória (não na URL)
+            currentUser = {
+                nome: data.nome,
+                turma: data.turma
+            };
+            
+            // Redireciona SEM parâmetros na URL
             if (data.turma === 'Formare 2025') {
-                window.location.href = `formare.html?nome=${encodeURIComponent(data.nome)}`;
-            } else if (data.turma === 'Aprender A+ 2025') {
-                window.location.href = `aprender.html?nome=${encodeURIComponent(data.nome)}`;
+                window.location.href = 'formare.html';
+            } else {
+                window.location.href = 'aprender.html';
             }
         } else {
-            showMessage('EDV ou turma incorretos. Por favor, tente novamente.', 'error');
+            alert('EDV ou turma incorretos');
         }
     } catch (error) {
-        showMessage('Erro ao conectar com o servidor. Tente novamente mais tarde.', 'error');
-        console.error('Erro:', error);
+        alert('Erro ao conectar com o servidor');
+        console.error(error);
     }
 }
 
-// Função para carregar a escala
-async function loadScheduleData(turma) {
-    try {
-        const response = await fetch(`${API_URL}/escala/${encodeURIComponent(turma)}`);
-        const data = await response.json();
-        
-        if (data.error) {
-            console.error(data.error);
-            return;
-        }
-        
-        document.getElementById('currentWeek').textContent = data.semana_atual;
-        const tbody = document.querySelector('#scheduleTable tbody');
-        tbody.innerHTML = '';
-        
-        data.duplas.forEach(item => {
-            const row = document.createElement('tr');
-            
-            const semanaCell = document.createElement('td');
-            semanaCell.textContent = item.semana;
-            
-            const duplaCell = document.createElement('td');
-            duplaCell.textContent = item.dupla;
-            
-            row.appendChild(semanaCell);
-            row.appendChild(duplaCell);
-            
-            if (item.semana === data.semana_atual) {
-                row.style.backgroundColor = '#e3f2fd';
-                row.style.fontWeight = 'bold';
-            }
-            
-            tbody.appendChild(row);
-        });
-    } catch (error) {
-        console.error('Erro ao carregar escala:', error);
+// Função para verificar autenticação
+async function checkAuth() {
+    // Se não tem usuário na memória, volta para login
+    if (!currentUser) {
+        window.location.href = 'index.html';
+        return false;
     }
-}
-
-// Função para mostrar mensagens
-function showMessage(text, type) {
-    const messageEl = document.getElementById('message');
-    messageEl.textContent = text;
-    messageEl.className = `message ${type}`;
-    messageEl.style.display = 'block';
     
-    setTimeout(() => {
-        messageEl.style.display = 'none';
-    }, 5000);
+    // Verifica no servidor se a sessão ainda é válida
+    try {
+        const response = await fetch(`${API_URL}/verify`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ 
+                turma: currentUser.turma,
+                nome: currentUser.nome 
+            }),
+        });
+        
+        return response.ok;
+    } catch (error) {
+        return false;
+    }
 }
 
-// Verificação ao carregar a página
-document.addEventListener('DOMContentLoaded', function() {
+// Modifique o event listener
+document.addEventListener('DOMContentLoaded', async function() {
     // Página de login
-    if (window.location.pathname.includes('index.html') || 
-        window.location.pathname === '/' || 
-        window.location.pathname === '/index') {
-        
-        const loginForm = document.getElementById('loginForm');
-        if (loginForm) {
-            loginForm.addEventListener('submit', login);
-        }
+    if (window.location.pathname.endsWith('index.html')) {
+        document.getElementById('loginForm').addEventListener('submit', login);
+        return;
     }
-    // Páginas internas (Formare/Aprender)
-    else {
-        // Pega o nome da URL
-        const urlParams = new URLSearchParams(window.location.search);
-        const nome = urlParams.get('nome');
-        
-        if (!nome) {
-            // Se não tiver nome na URL, volta para login
-            window.location.href = 'index.html';
-        } else {
-            // Mostra boas-vindas
-            document.getElementById('welcome').textContent = `Bem-vindo(a), ${decodeURIComponent(nome)}`;
-            
-            // Carrega a escala conforme a página
-            if (window.location.pathname.includes('formare.html')) {
-                loadScheduleData('Formare 2025');
-            } else if (window.location.pathname.includes('aprender.html')) {
-                loadScheduleData('Aprender A+ 2025');
-            }
-        }
+    
+    // Páginas internas
+    if (!await checkAuth()) {
+        window.location.href = 'index.html';
+        return;
     }
+    
+    // Mostra os dados do usuário
+    document.getElementById('welcome').textContent = `Bem-vindo(a), ${currentUser.nome}`;
+    
+    // Carrega a escala
+    loadScheduleData(currentUser.turma);
 });
