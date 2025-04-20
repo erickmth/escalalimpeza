@@ -18,22 +18,14 @@ async function login(event) {
             body: JSON.stringify({ turma, edv }),
         });
         
-        if (!response.ok) throw new Error('Erro na requisição');
-        
         const data = await response.json();
         
         if (data.success) {
-            // Usando sessionStorage que limpa ao fechar o navegador
-            sessionStorage.setItem('userData', JSON.stringify({
-                nome: data.nome,
-                turma: data.turma,
-                ultimoAcesso: new Date().getTime() // Adiciona timestamp
-            }));
-            
+            // Redireciona imediatamente SEM salvar no storage
             if (data.turma === 'Formare 2025') {
-                window.location.href = 'formare.html';
+                window.location.href = `formare.html?nome=${encodeURIComponent(data.nome)}`;
             } else if (data.turma === 'Aprender A+ 2025') {
-                window.location.href = 'aprender.html';
+                window.location.href = `aprender.html?nome=${encodeURIComponent(data.nome)}`;
             }
         } else {
             showMessage('EDV ou turma incorretos. Por favor, tente novamente.', 'error');
@@ -48,8 +40,6 @@ async function login(event) {
 async function loadScheduleData(turma) {
     try {
         const response = await fetch(`${API_URL}/escala/${encodeURIComponent(turma)}`);
-        if (!response.ok) throw new Error('Erro ao carregar escala');
-        
         const data = await response.json();
         
         if (data.error) {
@@ -82,22 +72,12 @@ async function loadScheduleData(turma) {
         });
     } catch (error) {
         console.error('Erro ao carregar escala:', error);
-        showMessage('Erro ao carregar a escala. Recarregue a página.', 'error');
     }
-}
-
-// Função para logout
-function logout() {
-    sessionStorage.removeItem('userData');
-    localStorage.removeItem('userData'); // Limpa para garantir
-    window.location.href = 'index.html';
 }
 
 // Função para mostrar mensagens
 function showMessage(text, type) {
     const messageEl = document.getElementById('message');
-    if (!messageEl) return;
-    
     messageEl.textContent = text;
     messageEl.className = `message ${type}`;
     messageEl.style.display = 'block';
@@ -107,54 +87,32 @@ function showMessage(text, type) {
     }, 5000);
 }
 
-// Verificação de sessão e timeout (30 minutos)
-function checkSession() {
-    const userData = sessionStorage.getItem('userData');
-    if (!userData) return false;
-    
-    const { ultimoAcesso } = JSON.parse(userData);
-    const tempoAtual = new Date().getTime();
-    const tempoDecorrido = (tempoAtual - ultimoAcesso) / (1000 * 60); // Em minutos
-    
-    if (tempoDecorrido > 30) { // 30 minutos de inatividade
-        logout();
-        return false;
-    }
-    
-    return true;
-}
-
-// Configuração inicial
+// Verificação ao carregar a página
 document.addEventListener('DOMContentLoaded', function() {
-    // Configura botão de logout
-    const logoutBtn = document.getElementById('logoutBtn');
-    if (logoutBtn) {
-        logoutBtn.addEventListener('click', logout);
-    }
-    
     // Página de login
     if (window.location.pathname.includes('index.html') || 
         window.location.pathname === '/' || 
         window.location.pathname === '/index') {
-        
-        if (checkSession()) {
-            const { turma } = JSON.parse(sessionStorage.getItem('userData'));
-            window.location.href = turma === 'Formare 2025' ? 'formare.html' : 'aprender.html';
-        }
         
         const loginForm = document.getElementById('loginForm');
         if (loginForm) {
             loginForm.addEventListener('submit', login);
         }
     }
-    // Páginas internas
+    // Páginas internas (Formare/Aprender)
     else {
-        if (!checkSession()) {
+        // Pega o nome da URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const nome = urlParams.get('nome');
+        
+        if (!nome) {
+            // Se não tiver nome na URL, volta para login
             window.location.href = 'index.html';
         } else {
-            const userData = JSON.parse(sessionStorage.getItem('userData'));
-            document.getElementById('welcome').textContent = `Bem-vindo(a), ${userData.nome}`;
+            // Mostra boas-vindas
+            document.getElementById('welcome').textContent = `Bem-vindo(a), ${decodeURIComponent(nome)}`;
             
+            // Carrega a escala conforme a página
             if (window.location.pathname.includes('formare.html')) {
                 loadScheduleData('Formare 2025');
             } else if (window.location.pathname.includes('aprender.html')) {
