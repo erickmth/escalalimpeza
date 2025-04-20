@@ -7,6 +7,57 @@
     <link rel="stylesheet" href="style.css">
     <link rel="shortcut icon" type="image/x-icon" href="favicon.svg">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.7);
+        }
+        
+        .modal-content {
+            background-color: #fefefe;
+            margin: 5% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            max-width: 800px;
+            max-height: 80vh;
+            overflow-y: auto;
+            border-radius: 8px;
+        }
+        
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        
+        .close:hover {
+            color: black;
+        }
+        
+        .terms-footer {
+            margin-top: 20px;
+            text-align: center;
+        }
+        
+        .terms-checkbox {
+            margin: 20px 0;
+            text-align: center;
+        }
+        
+        .terms-checkbox label {
+            margin-left: 10px;
+        }
+    </style>
 </head>
 <body>
     <div class="container">
@@ -32,16 +83,99 @@
                     <input type="text" id="edv" name="edv" placeholder="Digite seu EDV" required>
                 </div>
                 
-                <button type="submit" class="btn">Entrar</button>
+                <div class="terms-checkbox">
+                    <input type="checkbox" id="acceptTerms" required>
+                    <label for="acceptTerms">Eu li e aceito os <a href="#" id="termsLink">Termos de Uso</a></label>
+                </div>
                 
+                <button type="submit" class="btn">Entrar</button>
             </form>
             
             <div id="message" class="message"></div>
         </div>
     </div>
+    
+    <!-- Modal de Termos de Uso -->
+    <div id="termsModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Termos de Uso</h2>
+            <p><strong>Última atualização: 20 de abril de 2025</strong></p>
+
+            <p>Ao acessar e utilizar o site <strong>Escala de Limpeza Instituto Robert Bosch</strong>, você concorda com os seguintes Termos de Uso. Se não concordar com qualquer parte deste contrato, pedimos que não utilize nossos serviços.</p>
+
+            <h3>1. Objetivo do site</h3>
+            <p>Este site é destinado exclusivamente para o acesso e visualização da escala de limpeza mensal. O serviço é oferecido aos usuários que se registrarem e fizerem login com suas credenciais.</p>
+
+            <h3>2. Cadastro e Responsabilidade</h3>
+            <p>Você se compromete a fornecer informações verdadeiras, precisas e completas ao criar sua conta. Você é responsável por manter a confidencialidade dos dados de login (como seu EDV) e por todas as atividades realizadas sob sua conta. Qualquer atividade não autorizada deve ser imediatamente comunicada à administração do site.</p>
+
+            <h3>3. Uso adequado</h3>
+            <p>Este site deve ser utilizado exclusivamente para fins relacionados à consulta da escala de limpeza. Qualquer uso indevido, como tentativas de acessar áreas restritas do sistema ou manipulação de dados, poderá resultar em suspensão ou bloqueio da sua conta.</p>
+
+            <h3>4. Privacidade e proteção de dados</h3>
+            <p>Respeitamos a sua privacidade. Os dados fornecidos (como o EDV e a turma) serão utilizados apenas para o funcionamento do sistema e para fornecer a você uma experiência personalizada. Não compartilhamos suas informações pessoais com terceiros, exceto quando necessário para cumprir obrigações legais.</p>
+
+            <h3>5. Propriedade intelectual</h3>
+            <p>O conteúdo deste site, incluindo texto, imagens, gráficos, logotipos e código-fonte, é de propriedade da <strong>Escala de Limpeza Instituto Robert Bosch</strong> e está protegido por leis de direitos autorais e propriedade intelectual. O uso não autorizado de qualquer conteúdo do site é estritamente proibido.</p>
+
+            <h3>6. Alterações nos Termos de Uso</h3>
+            <p>A <strong>Escala de Limpeza Instituto Robert Bosch</strong> reserva-se o direito de alterar estes Termos de Uso a qualquer momento. Quaisquer mudanças serão publicadas no site, e a data de atualização será modificada. O uso contínuo do site após essas alterações implica na aceitação dos novos termos.</p>
+
+            <h3>7. Limitação de responsabilidade</h3>
+            <p>A <strong>Escala de Limpeza Instituto Robert Bosch</strong> não se responsabiliza por qualquer dano ou prejuízo decorrente do uso do site, incluindo falhas técnicas, interrupções no serviço ou problemas de acesso. Embora nos esforcemos para manter o site funcional e seguro, não garantimos que o serviço estará sempre disponível ou livre de erros.</p>
+
+            <h3>8. Créditos</h3>
+            <p>Este site foi desenvolvido por <strong>Erick Matheus</strong>, aluno do  <strong>Formare 2025</strong> do Instituto Robert Bosch.</p>
+
+            <h3>9. Consentimento</h3>
+            <p>Ao clicar em "Aceitar os Termos de Uso", você confirma que leu, compreendeu e concorda com as condições estabelecidas neste documento. Caso não concorde com algum dos termos, você não poderá acessar os serviços oferecidos.</p>
+
+            <h3>10. Contato</h3>
+            <p>Se você tiver dúvidas ou preocupações sobre os Termos de Uso, entre em contato com o desenvolvedor deste site através do e-mail: <a href="mailto:erickleguisamon@gmail.com">erickleguisamon@gmail.com</a>.</p>
+            
+            <div class="terms-footer">
+                <button id="acceptTermsBtn" class="btn">Aceitar Termos</button>
+            </div>
+        </div>
+    </div>
+    
     <footer>
         &copy; 2025 INRB. Todos os direitos reservados.
     </footer>
+    
+    <script>
+        // Modal de Termos de Uso
+        const modal = document.getElementById("termsModal");
+        const termsLink = document.getElementById("termsLink");
+        const closeBtn = document.querySelector(".close");
+        const acceptTermsBtn = document.getElementById("acceptTermsBtn");
+        const acceptTermsCheckbox = document.getElementById("acceptTerms");
+
+        // Abrir modal ao clicar no link dos termos
+        termsLink.addEventListener("click", function(e) {
+            e.preventDefault();
+            modal.style.display = "block";
+        });
+
+        // Fechar modal ao clicar no X
+        closeBtn.addEventListener("click", function() {
+            modal.style.display = "none";
+        });
+
+        // Fechar modal ao clicar fora da área do conteúdo
+        window.addEventListener("click", function(event) {
+            if (event.target === modal) {
+                modal.style.display = "none";
+            }
+        });
+
+        // Aceitar termos e marcar o checkbox
+        acceptTermsBtn.addEventListener("click", function() {
+            acceptTermsCheckbox.checked = true;
+            modal.style.display = "none";
+        });
+    </script>
     <script src="script.js"></script>
 </body>
 </html>
