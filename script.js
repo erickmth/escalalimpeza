@@ -110,7 +110,7 @@ document.addEventListener('DOMContentLoaded', function() {
             window.location.href = 'index.html';
         } else {
             // Mostra boas-vindas
-            document.getElementById('welcome').textContent = `Bem-vindo(a), ${decodeURIComponent(nome)}`;
+            document.getElementById('welcome').textContent = `Bem-vindo(a), ${decodeURIComponent(nome)} 👋`;
             
             // Carrega a escala conforme a página
             if (window.location.pathname.includes('formare.html')) {
