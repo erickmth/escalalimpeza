@@ -258,3 +258,11 @@ tr:hover {
           color: #d32f2f;
       }
       
+
+
+
+      .message.warning {
+        background-color: #fff3cd;
+        color: #856404;
+        border-left: 4px solid #ffeeba;
+    }

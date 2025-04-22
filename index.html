@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login </title>
+    <title>Login</title>
     <link rel="stylesheet" href="style.css">
     <link rel="shortcut icon" type="image/x-icon" href="favicon.png">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
@@ -53,6 +53,12 @@
             margin: 20px 0;
             text-align: center;
         }
+
+        .message.warning {
+            background-color: #fff3cd;
+            color: #856404;
+            border-left: 4px solid #ffeeba;
+        }
     </style>
 </head>
 <body>
@@ -61,9 +67,8 @@
             <a href="index.html">
                 <img src="logo.svg" alt="INRB Logo" class="logo" style="cursor: pointer;">
             </a>
-            <button onclick="window.location.href='index.html'" class="logout-btn">Sair</button>
+
         </div>        
-        
         
         <div class="login-box">
             <h1>Login</h1>
@@ -92,6 +97,7 @@
             </form>
             
             <div id="message" class="message"></div>
+            <div id="attemptsWarning" class="message warning" style="display: none;"></div>
         </div>
     </div>
     

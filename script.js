@@ -1,9 +1,74 @@
 // Configuração da API
 const API_URL = 'https://erickmth.pythonanywhere.com/api';
 
+// Variáveis para controle de tentativas
+let loginAttempts = 0;
+let blockedUntil = 0;
+let nextBlockDuration = 1 * 60 * 1000; // 1 minuto inicialmente
+
+// Função para verificar se o usuário está bloqueado
+function isUserBlocked() {
+    const now = Date.now();
+    if (now < blockedUntil) {
+        const remainingMinutes = Math.ceil((blockedUntil - now) / (60 * 1000));
+        showMessage(`Você excedeu o número de tentativas. Tente novamente em ${remainingMinutes} minuto(s).`, 'error');
+        return true;
+    }
+    return false;
+}
+
+// Função para bloquear o usuário
+function blockUser() {
+    const now = Date.now();
+    blockedUntil = now + nextBlockDuration;
+    
+    // Aumenta o tempo de bloqueio progressivamente
+    if (loginAttempts >= 15) {
+        nextBlockDuration = 2 * 60 * 60 * 1000; // 2 horas
+    } else if (loginAttempts >= 10) {
+        nextBlockDuration = 30 * 60 * 1000; // 30 minutos
+    } else if (loginAttempts >= 5) {
+        nextBlockDuration = 1 * 60 * 1000; // 1 minuto
+    }
+    
+    // Armazena no localStorage
+    localStorage.setItem('blockedUntil', blockedUntil.toString());
+    localStorage.setItem('loginAttempts', loginAttempts.toString());
+    localStorage.setItem('nextBlockDuration', nextBlockDuration.toString());
+}
+
+// Função para carregar o estado do bloqueio
+function loadBlockState() {
+    const storedBlockedUntil = localStorage.getItem('blockedUntil');
+    const storedAttempts = localStorage.getItem('loginAttempts');
+    const storedDuration = localStorage.getItem('nextBlockDuration');
+    
+    if (storedBlockedUntil) blockedUntil = parseInt(storedBlockedUntil);
+    if (storedAttempts) loginAttempts = parseInt(storedAttempts);
+    if (storedDuration) nextBlockDuration = parseInt(storedDuration);
+}
+
+// Função para mostrar aviso de tentativas restantes
+function showAttemptsWarning() {
+    const remainingAttempts = 5 - loginAttempts;
+    const warningEl = document.getElementById('attemptsWarning');
+    
+    if (loginAttempts >= 2 && loginAttempts < 5) {
+        warningEl.textContent = `⚠️ Você teve ${loginAttempts} tentativas incorretas. Após ${remainingAttempts} tentativas erradas, seu acesso será bloqueado por 1 minuto.`;
+        warningEl.style.display = 'block';
+    } else {
+        warningEl.style.display = 'none';
+    }
+}
+
 // Função para fazer login
 async function login(event) {
     event.preventDefault();
+    
+    // Verifica se o usuário está bloqueado
+    if (isUserBlocked()) {
+        return;
+    }
     
     const turma = document.getElementById('turma').value;
     const edv = document.getElementById('edv').value;
@@ -21,6 +86,12 @@ async function login(event) {
         const data = await response.json();
         
         if (data.success) {
+            // Resetar contador de tentativas em caso de sucesso
+            loginAttempts = 0;
+            localStorage.removeItem('loginAttempts');
+            localStorage.removeItem('blockedUntil');
+            localStorage.removeItem('nextBlockDuration');
+            
             // Redireciona imediatamente SEM salvar no storage
             if (data.turma === 'Formare 2025') {
                 window.location.href = `formare.html?nome=${encodeURIComponent(data.nome)}`;
@@ -28,7 +99,16 @@ async function login(event) {
                 window.location.href = `aprender.html?nome=${encodeURIComponent(data.nome)}`;
             }
         } else {
-            showMessage('EDV ou turma incorretos. Por favor, tente novamente.', 'error');
+            loginAttempts++;
+            localStorage.setItem('loginAttempts', loginAttempts.toString());
+            
+            if (loginAttempts >= 5) {
+                blockUser();
+                showMessage('❌ Número máximo de tentativas excedido. Seu acesso foi bloqueado por 1 minuto.', 'error');
+            } else {
+                showMessage('EDV ou turma incorretos. Por favor, tente novamente.', 'error');
+                showAttemptsWarning();
+            }
         }
     } catch (error) {
         showMessage('Erro ao conectar com o servidor. Tente novamente mais tarde.', 'error');
@@ -89,6 +169,9 @@ function showMessage(text, type) {
 
 // Verificação ao carregar a página
 document.addEventListener('DOMContentLoaded', function() {
+    // Carrega o estado do bloqueio
+    loadBlockState();
+    
     // Página de login
     if (window.location.pathname.includes('index.html') || 
         window.location.pathname === '/' || 
@@ -97,6 +180,14 @@ document.addEventListener('DOMContentLoaded', function() {
         const loginForm = document.getElementById('loginForm');
         if (loginForm) {
             loginForm.addEventListener('submit', login);
+            
+            // Mostra aviso se já houver tentativas
+            if (loginAttempts >= 2 && loginAttempts < 5) {
+                showAttemptsWarning();
+            } else if (isUserBlocked()) {
+                const remainingMinutes = Math.ceil((blockedUntil - Date.now()) / (60 * 1000));
+                showMessage(`⏳ Seu acesso está bloqueado. Tente novamente em ${remainingMinutes} minuto(s).`, 'error');
+            }
         }
     }
     // Páginas internas (Formare/Aprender)
