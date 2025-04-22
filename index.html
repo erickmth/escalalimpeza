@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login</title>
+    <title>Login - Sistema de Limpeza</title>
     <link rel="stylesheet" href="style.css">
     <link rel="shortcut icon" type="image/x-icon" href="favicon.png">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
@@ -67,7 +67,6 @@
             <a href="index.html">
                 <img src="logo.svg" alt="INRB Logo" class="logo" style="cursor: pointer;">
             </a>
-
         </div>        
         
         <div class="login-box">
@@ -79,7 +78,10 @@
                     <select id="turma" name="turma" required>
                         <option value="" disabled selected>Selecione sua turma</option>
                         <option value="Formare 2025">Formare 2025</option>
-                        <option value="Aprender A+ 2025">Aprender A+ 2025</option>
+                        <option value="Aprender A+ (Terça-Feira)">Aprender A+ (Terça-Feira)</option>
+                        <option value="Aprender A+ (Quarta-Feira)">Aprender A+ (Quarta-Feira)</option>
+                        <option value="Aprender A+ (Quinta-Feira)">Aprender A+ (Quinta-Feira)</option>
+                        <option value="Informática ETS">Informática ETS</option>
                     </select>
                 </div>
                 
@@ -108,31 +110,22 @@
             <h2>Termos de Uso</h2>
             <p><strong>Última atualização: 20 de abril de 2025</strong></p>
 
-            <p>Ao acessar e utilizar o site <strong>Escala de Limpeza do Formare</strong>, você concorda com os seguintes Termos de Uso. Se não concordar com algum deles, recomendamos não utilizar o site.</p>
+            <p>Ao acessar e utilizar o site <strong>Escala de Limpeza</strong>, você concorda com os seguintes Termos de Uso.</p>
 
-            <h3>1. Objetivo do site</h3>
-            <p>Este site foi criado para organizar e facilitar a consulta da escala de limpeza da sala do Formare. A ideia é manter nosso ambiente limpo, organizado e agradável para todos, incentivando o cuidado coletivo com o espaço que compartilhamos todos os dias.</p>
+            <h3>1. Objetivo</h3>
+            <p>Organizar e facilitar a consulta da escala de limpeza das salas.</p>
             
-            <h3>2. Acesso ao sistema</h3>
-            <p>O acesso é feito apenas por login, com base nas informações cadastradas previamente no sistema. Não há necessidade de criar conta ou fornecer dados além dos que já foram disponibilizados pela turma.</p>
+            <h3>2. Acesso</h3>
+            <p>Login exclusivo para alunos cadastrados em cada turma.</p>
             
             <h3>3. Uso adequado</h3>
-            <p>Este site deve ser utilizado apenas para ver a escala de limpeza. Qualquer tentativa de alterar informações ou acessar áreas indevidas poderá levar ao bloqueio do acesso.</p>
+            <p>Somente para consulta da escala de limpeza.</p>
             
             <h3>4. Privacidade</h3>
-            <p>As informações utilizadas, como nome, EDV e turma, são usadas apenas dentro do próprio sistema da escala. Nenhum dado será exposto ou compartilhado fora do grupo da turma.</p>
+            <p>Dados são usados apenas dentro do sistema.</p>
             
-            <h3>5. Conteúdo do site</h3>
-            <p>Todo o conteúdo deste site — como textos, imagens, layout e código — foi feito exclusivamente para uso da turma do Formare. Pedimos que não seja copiado ou alterado sem permissão.</p>
-            
-            <h3>6. Atualizações</h3>
-            <p>Os Termos de Uso podem ser ajustados se necessário. Qualquer mudança será comunicada diretamente na página.</p>
-            
-            <h3>7. Sobre o projeto</h3>
-            <p>Este site foi desenvolvido por <strong>Erick Matheus</strong>, aluno do <strong>Formare 2025</strong>, com a intenção de facilitar a organização da turma e promover um ambiente mais limpo e colaborativo.</p>
-            
-            <h3>8. Contato</h3>
-            <p>Se tiver dúvidas ou sugestões, entre em contato comigo pelo e-mail: <a href="mailto:erickleguisamon@gmail.com">erickleguisamon@gmail.com</a>.</p>
+            <h3>5. Desenvolvedor</h3>
+            <p>Sistema desenvolvido por <strong>Erick Matheus</strong> - Formare 2025</p>
             
             <div class="terms-footer">
                 <button id="acceptTermsBtn" class="btn">Aceitar Termos</button>
@@ -163,14 +156,14 @@
             modal.style.display = "none";
         });
 
-        // Fechar modal ao clicar fora da área do conteúdo
+        // Fechar modal ao clicar fora
         window.addEventListener("click", function(event) {
             if (event.target === modal) {
                 modal.style.display = "none";
             }
         });
 
-        // Aceitar termos e marcar o checkbox
+        // Aceitar termos
         acceptTermsBtn.addEventListener("click", function() {
             acceptTermsCheckbox.checked = true;
             modal.style.display = "none";

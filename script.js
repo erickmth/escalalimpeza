@@ -7,7 +7,7 @@ let blockedUntil = 0;
 let nextBlockDuration = 1 * 60 * 1000; // 1 minuto inicialmente
 
 // =============================================
-// FUNÇÕES PRINCIPAIS
+// FUNÇÕES DE CONTROLE DE ACESSO
 // =============================================
 
 function checkBlockExpiration() {
@@ -30,9 +30,9 @@ function blockUser() {
     const now = Date.now();
     blockedUntil = now + nextBlockDuration;
     
-    if (loginAttempts >= 15) nextBlockDuration = 2 * 60 * 60 * 1000;
-    else if (loginAttempts >= 10) nextBlockDuration = 30 * 60 * 1000;
-    else if (loginAttempts >= 5) nextBlockDuration = 1 * 60 * 1000;
+    if (loginAttempts >= 15) nextBlockDuration = 2 * 60 * 60 * 1000; // 2 horas
+    else if (loginAttempts >= 10) nextBlockDuration = 30 * 60 * 1000; // 30 minutos
+    else if (loginAttempts >= 5) nextBlockDuration = 1 * 60 * 1000; // 1 minuto
     
     localStorage.setItem('blockedUntil', blockedUntil.toString());
     localStorage.setItem('loginAttempts', loginAttempts.toString());
@@ -52,7 +52,7 @@ function loadBlockState() {
 }
 
 // =============================================
-// FUNÇÕES DE INTERFACE (ATUALIZADAS)
+// FUNÇÕES DE INTERFACE
 // =============================================
 
 function showAttemptsWarning() {
@@ -62,7 +62,6 @@ function showAttemptsWarning() {
         warningEl.textContent = `⚠️ Você teve ${loginAttempts} tentativas incorretas. Após ${5 - loginAttempts} tentativas, será bloqueado por 1 minuto.`;
         warningEl.style.display = 'block';
         
-        // Desaparece após 5 segundos (igual ao aviso vermelho)
         setTimeout(() => {
             warningEl.style.display = 'none';
         }, 5000);
@@ -113,8 +112,15 @@ async function login(event) {
             localStorage.removeItem('blockedUntil');
             localStorage.removeItem('nextBlockDuration');
             
-            const page = data.turma.includes('Formare') ? 'formare' : 'aprender';
-            window.location.href = `${page}.html?nome=${encodeURIComponent(data.nome)}`;
+            // Redirecionamento baseado na turma
+            let page = 'escala';
+            if (turma.includes('Formare')) page = 'formare';
+            else if (turma.includes('Terça')) page = 'aprender_terca';
+            else if (turma.includes('Quarta')) page = 'aprender_quarta';
+            else if (turma.includes('Quinta')) page = 'aprender_quinta';
+            else if (turma.includes('Informática')) page = 'informatica_ets';
+            
+            window.location.href = `${page}.html?nome=${encodeURIComponent(data.nome)}&admin=${data.is_admin}`;
         } else {
             loginAttempts++;
             localStorage.setItem('loginAttempts', loginAttempts.toString());
@@ -130,6 +136,59 @@ async function login(event) {
     } catch (error) {
         showMessage('Erro de conexão com o servidor', 'error');
         console.error('Erro:', error);
+    }
+}
+
+// =============================================
+// FUNÇÃO DE CARREGAR ESCALA
+// =============================================
+
+async function loadScheduleData(turma) {
+    try {
+        const response = await fetch(`${API_URL}/escala/${encodeURIComponent(turma)}`);
+        const data = await response.json();
+        
+        if (data.error) {
+            console.error(data.error);
+            return;
+        }
+        
+        // Atualiza a semana atual
+        if (document.getElementById('currentWeek')) {
+            document.getElementById('currentWeek').textContent = data.semana_atual;
+        }
+        
+        // Preenche a tabela de escalas
+        const tbody = document.querySelector('#scheduleTable tbody');
+        if (tbody) {
+            tbody.innerHTML = '';
+            
+            data.duplas.forEach(item => {
+                const row = document.createElement('tr');
+                const semanaCell = document.createElement('td');
+                semanaCell.textContent = item.semana;
+                
+                const duplaCell = document.createElement('td');
+                duplaCell.textContent = item.dupla;
+                
+                row.append(semanaCell, duplaCell);
+                if (item.semana === data.semana_atual) {
+                    row.style.cssText = 'background-color: #e3f2fd; font-weight: bold;';
+                }
+                tbody.appendChild(row);
+            });
+        }
+        
+        // Verifica se é admin para mostrar controles adicionais
+        const urlParams = new URLSearchParams(window.location.search);
+        const isAdmin = urlParams.get('admin') === 'true';
+        
+        if (isAdmin && document.querySelector('.admin-controls')) {
+            document.querySelector('.admin-controls').style.display = 'block';
+        }
+    } catch (error) {
+        console.error('Erro ao carregar escala:', error);
+        showMessage('Erro ao carregar dados da escala', 'error');
     }
 }
 
@@ -154,47 +213,22 @@ document.addEventListener('DOMContentLoaded', function() {
         if (!nome) {
             window.location.href = 'index.html';
         } else {
-            document.getElementById('welcome').textContent = `Bem-vindo(a), ${decodeURIComponent(nome)} 👋`;
-            
-            if (window.location.pathname.includes('formare.html')) {
-                loadScheduleData('Formare 2025');
-            } else if (window.location.pathname.includes('aprender.html')) {
-                loadScheduleData('Aprender A+ 2025');
+            // Atualiza a mensagem de boas-vindas
+            if (document.getElementById('welcome')) {
+                document.getElementById('welcome').textContent = `Bem-vindo(a), ${decodeURIComponent(nome)} 👋`;
             }
+            
+            // Identifica a turma atual baseada na página
+            let turma = '';
+            const path = window.location.pathname;
+            
+            if (path.includes('formare.html')) turma = 'Formare 2025';
+            else if (path.includes('aprender_terca.html')) turma = 'Aprender A+ (Terça-Feira)';
+            else if (path.includes('aprender_quarta.html')) turma = 'Aprender A+ (Quarta-Feira)';
+            else if (path.includes('aprender_quinta.html')) turma = 'Aprender A+ (Quinta-Feira)';
+            else if (path.includes('informatica_ets.html')) turma = 'Informática ETS';
+            
+            if (turma) loadScheduleData(turma);
         }
     }
 });
-
-// =============================================
-// FUNÇÃO DE CARREGAR ESCALA (MANTIDA ORIGINAL)
-// =============================================
-
-async function loadScheduleData(turma) {
-    try {
-        const response = await fetch(`${API_URL}/escala/${encodeURIComponent(turma)}`);
-        const data = await response.json();
-        
-        if (data.error) return console.error(data.error);
-        
-        document.getElementById('currentWeek').textContent = data.semana_atual;
-        const tbody = document.querySelector('#scheduleTable tbody');
-        tbody.innerHTML = '';
-        
-        data.duplas.forEach(item => {
-            const row = document.createElement('tr');
-            const semanaCell = document.createElement('td');
-            semanaCell.textContent = item.semana;
-            
-            const duplaCell = document.createElement('td');
-            duplaCell.textContent = item.dupla;
-            
-            row.append(semanaCell, duplaCell);
-            if (item.semana === data.semana_atual) {
-                row.style.cssText = 'background-color: #e3f2fd; font-weight: bold;';
-            }
-            tbody.appendChild(row);
-        });
-    } catch (error) {
-        console.error('Erro ao carregar escala:', error);
-    }
-}
