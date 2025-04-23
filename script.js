@@ -118,7 +118,8 @@ async function login(event) {
             else if (turma.includes('Terça')) page = 'aprender_terca';
             else if (turma.includes('Quarta')) page = 'aprender_quarta';
             else if (turma.includes('Quinta')) page = 'aprender_quinta';
-            else if (turma.includes('Informática')) page = 'informatica_ets';
+            else if (turma.includes('Informática')) page = 'informatica';
+            else if (turma.includes('Inglês')) page = 'ingles';
             
             window.location.href = `${page}.html?nome=${encodeURIComponent(data.nome)}&admin=${data.is_admin}`;
         } else {
@@ -226,7 +227,8 @@ document.addEventListener('DOMContentLoaded', function() {
             else if (path.includes('aprender_terca.html')) turma = 'Aprender A+ (Terça-Feira)';
             else if (path.includes('aprender_quarta.html')) turma = 'Aprender A+ (Quarta-Feira)';
             else if (path.includes('aprender_quinta.html')) turma = 'Aprender A+ (Quinta-Feira)';
-            else if (path.includes('informatica_ets.html')) turma = 'Informática ETS';
+            else if (path.includes('informatica.html')) turma = 'Informática (Atividade complementar)';
+            else if (path.includes('ingles.html')) turma = 'Inglês (Atividade complementar)';
             
             if (turma) loadScheduleData(turma);
         }
