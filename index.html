@@ -59,6 +59,25 @@
             color: #856404;
             border-left: 4px solid #ffeeba;
         }
+
+        .loading-spinner {
+            display: inline-block;
+            width: 24px;
+            height: 24px;
+            margin-left: 10px;
+            vertical-align: middle;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .btn.loading {
+            pointer-events: none;
+            opacity: 0.8;
+        }
     </style>
 </head>
 <body>
@@ -96,7 +115,14 @@
                     <label for="acceptTerms">Eu li e aceito os <a href="#" id="termsLink">Termos de Uso</a></label>
                 </div>
                 
-                <button type="submit" class="btn">Entrar</button>
+                <button type="submit" class="btn" id="loginButton">
+                    Entrar 
+                    <span id="loadingIndicator" style="display: none;">
+                        <svg class="loading-spinner" viewBox="0 0 50 50">
+                            <circle cx="25" cy="25" r="20" fill="none" stroke="#ffffff" stroke-width="4" stroke-dasharray="80 30"></circle>
+                        </svg>
+                    </span>
+                </button>
             </form>
             
             <div id="message" class="message"></div>
@@ -177,6 +203,24 @@
         acceptTermsBtn.addEventListener("click", function() {
             acceptTermsCheckbox.checked = true;
             modal.style.display = "none";
+        });
+
+        // Controle do estado de carregamento
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            const loginButton = document.getElementById('loginButton');
+            const loadingIndicator = document.getElementById('loadingIndicator');
+            
+            // Ativar estado de carregamento
+            loginButton.classList.add('loading');
+            loadingIndicator.style.display = 'inline-block';
+            loginButton.disabled = true;
+            
+            // Simular um tempo de carregamento (remova isso na implementação real)
+            setTimeout(function() {
+                loginButton.classList.remove('loading');
+                loadingIndicator.style.display = 'none';
+                loginButton.disabled = false;
+            }, 2000);
         });
     </script>
     <script src="script.js"></script>
