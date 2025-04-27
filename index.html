@@ -59,25 +59,6 @@
             color: #856404;
             border-left: 4px solid #ffeeba;
         }
-
-        .loading-spinner {
-            display: inline-block;
-            width: 24px;
-            height: 24px;
-            margin-left: 10px;
-            vertical-align: middle;
-            animation: spin 1s linear infinite;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        .btn.loading {
-            pointer-events: none;
-            opacity: 0.8;
-        }
     </style>
 </head>
 <body>
@@ -89,7 +70,7 @@
         </div>        
         
         <div class="login-box">
-            <h1>Login</h1>
+            <h1>Login - Escala de Limpeza</h1>
             
             <form id="loginForm">
                 <div class="form-group">
@@ -115,14 +96,7 @@
                     <label for="acceptTerms">Eu li e aceito os <a href="#" id="termsLink">Termos de Uso</a></label>
                 </div>
                 
-                <button type="submit" class="btn" id="loginButton">
-                    Entrar 
-                    <span id="loadingIndicator" style="display: none;">
-                        <svg class="loading-spinner" viewBox="0 0 50 50">
-                            <circle cx="25" cy="25" r="20" fill="none" stroke="#ffffff" stroke-width="4" stroke-dasharray="80 30"></circle>
-                        </svg>
-                    </span>
-                </button>
+                <button type="submit" class="btn">Entrar</button>
             </form>
             
             <div id="message" class="message"></div>
@@ -136,9 +110,9 @@
             <span class="close">&times;</span>
             <h2>Termos de Uso</h2>
             <p><strong>Última atualização: 20 de abril de 2025</strong></p>
-
+            
             <p>Ao acessar e utilizar o site <strong>Escala de Limpeza do Formare</strong>, você concorda com os seguintes Termos de Uso. Se não concordar com algum deles, recomendamos não utilizar o site.</p>
-
+            
             <h3>1. Objetivo do site</h3>
             <p>Este site foi criado para organizar e facilitar a consulta da escala de limpeza da sala do Formare. A ideia é manter nosso ambiente limpo, organizado e agradável para todos, incentivando o cuidado coletivo com o espaço que compartilhamos todos os dias.</p>
             
@@ -146,7 +120,7 @@
             <p>O acesso é feito apenas por login, com base nas informações cadastradas previamente no sistema. Não há necessidade de criar conta ou fornecer dados além dos que já foram disponibilizados pela turma.</p>
             
             <h3>3. Uso adequado</h3>
-            <p>Este site deve ser utilizado apenas para ver a escala de limpeza. Qualquer tentativa de alterar informações ou acessar áreas indevidas poderá levar ao bloqueio do acesso.</p>
+            <p>Este site deve ser utilizado apenas para ver a escala de limpeza. Qualquer tentativa de alterar informações ou acessar áreas indevidas poderá levar ao bloqueio do acesso, incluindo bloqueios baseados no IP do usuário em casos de tentativas repetidas de acesso indevido.</p>
             
             <h3>4. Privacidade</h3>
             <p>As informações utilizadas, como nome, EDV e turma, são usadas apenas dentro do próprio sistema da escala. Nenhum dado será exposto ou compartilhado fora do grupo da turma.</p>
@@ -161,7 +135,15 @@
             <p>Este site foi desenvolvido por <strong>Erick Matheus</strong>, aluno do <strong>Formare 2025</strong>, com a intenção de facilitar a organização da turma e promover um ambiente mais limpo e colaborativo.</p>
             
             <h3>8. Contato</h3>
-            <p>Se tiver dúvidas ou sugestões, entre em contato comigo pelo e-mail: <a href="mailto:erickleguisamon@gmail.com">erickleguisamon@gmail.com</a>.</p>
+            <p>Se tiver dúvidas ou sugestões, entre em contato comigo pelo e-mail: 
+                <a href="mailto:erickleguisamon@gmail.com">erickleguisamon@gmail.com</a> 
+                ou pelo WhatsApp:
+                <a href="https://wa.me/5541998239031" target="_blank" style="display: inline-flex; align-items: center; text-decoration: none; color: #ec3333; font-weight: bold;">
+                  <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WhatsApp" style="width: 20px; height: 20px; margin-right: 5px;">
+                  Fale comigo (Erick)
+                </a>
+              </p>            
+              
             
             <div class="terms-footer">
                 <button id="acceptTermsBtn" class="btn">Aceitar Termos</button>
@@ -203,24 +185,6 @@
         acceptTermsBtn.addEventListener("click", function() {
             acceptTermsCheckbox.checked = true;
             modal.style.display = "none";
-        });
-
-        // Controle do estado de carregamento
-        document.getElementById('loginForm').addEventListener('submit', function(e) {
-            const loginButton = document.getElementById('loginButton');
-            const loadingIndicator = document.getElementById('loadingIndicator');
-            
-            // Ativar estado de carregamento
-            loginButton.classList.add('loading');
-            loadingIndicator.style.display = 'inline-block';
-            loginButton.disabled = true;
-            
-            // Simular um tempo de carregamento (remova isso na implementação real)
-            setTimeout(function() {
-                loginButton.classList.remove('loading');
-                loadingIndicator.style.display = 'none';
-                loginButton.disabled = false;
-            }, 2000);
         });
     </script>
     <script src="script.js"></script>

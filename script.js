@@ -111,7 +111,12 @@ async function login(event) {
             localStorage.removeItem('loginAttempts');
             localStorage.removeItem('blockedUntil');
             localStorage.removeItem('nextBlockDuration');
-            
+
+            // Guarda nome, admin e turma em sessionStorage
+            sessionStorage.setItem('nome', data.nome);
+            sessionStorage.setItem('admin', data.is_admin);
+            sessionStorage.setItem('turma', turma);
+
             // Redirecionamento baseado na turma
             let page = 'escala';
             if (turma.includes('Formare')) page = 'formare';
@@ -121,7 +126,7 @@ async function login(event) {
             else if (turma.includes('Informática')) page = 'informatica';
             else if (turma.includes('Inglês')) page = 'ingles';
             
-            window.location.href = `${page}.html?nome=${encodeURIComponent(data.nome)}&admin=${data.is_admin}`;
+            window.location.href = `${page}.html`;
         } else {
             loginAttempts++;
             localStorage.setItem('loginAttempts', loginAttempts.toString());
@@ -154,12 +159,10 @@ async function loadScheduleData(turma) {
             return;
         }
         
-        // Atualiza a semana atual
         if (document.getElementById('currentWeek')) {
             document.getElementById('currentWeek').textContent = data.semana_atual;
         }
         
-        // Preenche a tabela de escalas
         const tbody = document.querySelector('#scheduleTable tbody');
         if (tbody) {
             tbody.innerHTML = '';
@@ -179,18 +182,34 @@ async function loadScheduleData(turma) {
                 tbody.appendChild(row);
             });
         }
-        
-        // Verifica se é admin para mostrar controles adicionais
-        const urlParams = new URLSearchParams(window.location.search);
-        const isAdmin = urlParams.get('admin') === 'true';
-        
-        if (isAdmin && document.querySelector('.admin-controls')) {
-            document.querySelector('.admin-controls').style.display = 'block';
-        }
     } catch (error) {
         console.error('Erro ao carregar escala:', error);
         showMessage('Erro ao carregar dados da escala', 'error');
     }
+}
+
+// =============================================
+// VERIFICAR ACESSO NA PÁGINA
+// =============================================
+
+function checkAccess() {
+    const nome = sessionStorage.getItem('nome');
+    const turma = sessionStorage.getItem('turma');
+    const admin = sessionStorage.getItem('admin') === 'true';
+    const path = window.location.pathname;
+
+    if (!nome || !turma) {
+        window.location.href = 'index.html';
+        return;
+    }
+
+    if (path.includes('formare.html') && !turma.includes('Formare')) window.location.href = 'index.html';
+    else if (path.includes('aprender_terca.html') && !turma.includes('Terça')) window.location.href = 'index.html';
+    else if (path.includes('aprender_quarta.html') && !turma.includes('Quarta')) window.location.href = 'index.html';
+    else if (path.includes('aprender_quinta.html') && !turma.includes('Quinta')) window.location.href = 'index.html';
+    else if (path.includes('informatica.html') && !turma.includes('Informática')) window.location.href = 'index.html';
+    else if (path.includes('ingles.html') && !turma.includes('Inglês')) window.location.href = 'index.html';
+    else if (path.includes('escala.html') && !admin) window.location.href = 'index.html';
 }
 
 // =============================================
@@ -210,27 +229,15 @@ document.addEventListener('DOMContentLoaded', function() {
             showMessage(`⏳ Acesso bloqueado. Tente novamente em ${remaining} minuto(s).`, 'error');
         }
     } else {
-        const nome = new URLSearchParams(window.location.search).get('nome');
-        if (!nome) {
-            window.location.href = 'index.html';
-        } else {
-            // Atualiza a mensagem de boas-vindas
-            if (document.getElementById('welcome')) {
-                document.getElementById('welcome').textContent = `Bem-vindo(a), ${decodeURIComponent(nome)} 👋`;
-            }
-            
-            // Identifica a turma atual baseada na página
-            let turma = '';
-            const path = window.location.pathname;
-            
-            if (path.includes('formare.html')) turma = 'Formare 2025';
-            else if (path.includes('aprender_terca.html')) turma = 'Aprender A+ (Terça-Feira)';
-            else if (path.includes('aprender_quarta.html')) turma = 'Aprender A+ (Quarta-Feira)';
-            else if (path.includes('aprender_quinta.html')) turma = 'Aprender A+ (Quinta-Feira)';
-            else if (path.includes('informatica.html')) turma = 'Informática (Atividade complementar)';
-            else if (path.includes('ingles.html')) turma = 'Inglês (Atividade complementar)';
-            
-            if (turma) loadScheduleData(turma);
+        checkAccess(); // Verifica se pode acessar esta página
+        
+        const nome = sessionStorage.getItem('nome');
+        if (document.getElementById('welcome')) {
+            document.getElementById('welcome').textContent = `Bem-vindo(a), ${decodeURIComponent(nome)} 👋`;
         }
+        
+        let turma = sessionStorage.getItem('turma') || '';
+
+        if (turma) loadScheduleData(turma);
     }
 });
