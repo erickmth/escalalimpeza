@@ -59,6 +59,32 @@
             color: #856404;
             border-left: 4px solid #ffeeba;
         }
+        
+        /* Estilos para o loading no botão */
+        .btn.loading {
+            position: relative;
+            color: transparent;
+            pointer-events: none;
+        }
+        
+        .btn.loading::after {
+            content: "";
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-top-color: white;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: translate(-50%, -50%) rotate(0deg); }
+            100% { transform: translate(-50%, -50%) rotate(360deg); }
+        }
     </style>
 </head>
 <body>
@@ -96,7 +122,7 @@
                     <label for="acceptTerms">Eu li e aceito os <a href="#" id="termsLink">Termos de Uso</a></label>
                 </div>
                 
-                <button type="submit" class="btn">Entrar</button>
+                <button type="submit" class="btn" id="loginButton">Entrar</button>
             </form>
             
             <div id="message" class="message"></div>
@@ -144,7 +170,6 @@
                 </a>
               </p>            
               
-            
             <div class="terms-footer">
                 <button id="acceptTermsBtn" class="btn">Aceitar Termos</button>
             </div>
@@ -162,6 +187,8 @@
         const closeBtn = document.querySelector(".close");
         const acceptTermsBtn = document.getElementById("acceptTermsBtn");
         const acceptTermsCheckbox = document.getElementById("acceptTerms");
+        const loginForm = document.getElementById("loginForm");
+        const loginButton = document.getElementById("loginButton");
 
         // Abrir modal ao clicar no link dos termos
         termsLink.addEventListener("click", function(e) {
@@ -185,6 +212,28 @@
         acceptTermsBtn.addEventListener("click", function() {
             acceptTermsCheckbox.checked = true;
             modal.style.display = "none";
+        });
+
+        // Adicionar loading ao botão quando o formulário for submetido
+        loginForm.addEventListener("submit", function(e) {
+            e.preventDefault();
+            
+            // Ativar estado de loading no botão
+            loginButton.classList.add("loading");
+            loginButton.disabled = true;
+            
+            // Simular delay de 2 segundos para o carregamento
+            setTimeout(function() {
+
+                loginButton.classList.remove("loading");
+                loginButton.disabled = false;
+
+                document.getElementById("message").textContent = "Login realizado com sucesso!";
+                document.getElementById("message").style.display = "block";
+                
+
+                
+            }, 2000); 
         });
     </script>
     <script src="script.js"></script>
