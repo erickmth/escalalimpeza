@@ -1,14 +1,8 @@
-// Configuração da API
 const API_URL = 'https://erickmth.pythonanywhere.com/api';
 
-// Variáveis para controle de tentativas
 let loginAttempts = 0;
 let blockedUntil = 0;
-let nextBlockDuration = 1 * 60 * 1000; // 1 minuto inicialmente
-
-// =============================================
-// FUNÇÕES DE CONTROLE DE ACESSO
-// =============================================
+let nextBlockDuration = 1 * 60 * 1000;
 
 function checkBlockExpiration() {
     const now = Date.now();
@@ -30,9 +24,9 @@ function blockUser() {
     const now = Date.now();
     blockedUntil = now + nextBlockDuration;
     
-    if (loginAttempts >= 15) nextBlockDuration = 2 * 60 * 60 * 1000; // 2 horas
-    else if (loginAttempts >= 10) nextBlockDuration = 30 * 60 * 1000; // 30 minutos
-    else if (loginAttempts >= 5) nextBlockDuration = 1 * 60 * 1000; // 1 minuto
+    if (loginAttempts >= 15) nextBlockDuration = 2 * 60 * 60 * 1000;
+    else if (loginAttempts >= 10) nextBlockDuration = 30 * 60 * 1000;
+    else if (loginAttempts >= 5) nextBlockDuration = 1 * 60 * 1000;
     
     localStorage.setItem('blockedUntil', blockedUntil.toString());
     localStorage.setItem('loginAttempts', loginAttempts.toString());
@@ -50,10 +44,6 @@ function loadBlockState() {
     
     checkBlockExpiration();
 }
-
-// =============================================
-// FUNÇÕES DE INTERFACE
-// =============================================
 
 function showAttemptsWarning() {
     const warningEl = document.getElementById('attemptsWarning');
@@ -81,16 +71,18 @@ function showMessage(text, type) {
     }, 5000);
 }
 
-// =============================================
-// FUNÇÃO DE LOGIN
-// =============================================
-
 async function login(event) {
     event.preventDefault();
+    
+    const loginButton = document.getElementById('loginButton');
+    loginButton.classList.add('loading');
+    loginButton.disabled = true;
     
     if (checkBlockExpiration()) {
         const remaining = Math.ceil((blockedUntil - Date.now()) / (60 * 1000));
         showMessage(`⏳ Acesso bloqueado. Tente novamente em ${remaining} minuto(s).`, 'error');
+        loginButton.classList.remove('loading');
+        loginButton.disabled = false;
         return;
     }
     
@@ -112,12 +104,10 @@ async function login(event) {
             localStorage.removeItem('blockedUntil');
             localStorage.removeItem('nextBlockDuration');
 
-            // Guarda nome, admin e turma em sessionStorage
             sessionStorage.setItem('nome', data.nome);
             sessionStorage.setItem('admin', data.is_admin);
             sessionStorage.setItem('turma', turma);
 
-            // Redirecionamento baseado na turma
             let page = 'escala';
             if (turma.includes('Formare')) page = 'formare';
             else if (turma.includes('Terça')) page = 'aprender_terca';
@@ -142,12 +132,11 @@ async function login(event) {
     } catch (error) {
         showMessage('Erro de conexão com o servidor', 'error');
         console.error('Erro:', error);
+    } finally {
+        loginButton.classList.remove('loading');
+        loginButton.disabled = false;
     }
 }
-
-// =============================================
-// FUNÇÃO DE CARREGAR ESCALA
-// =============================================
 
 async function loadScheduleData(turma) {
     try {
@@ -188,10 +177,6 @@ async function loadScheduleData(turma) {
     }
 }
 
-// =============================================
-// VERIFICAR ACESSO NA PÁGINA
-// =============================================
-
 function checkAccess() {
     const nome = sessionStorage.getItem('nome');
     const turma = sessionStorage.getItem('turma');
@@ -212,10 +197,6 @@ function checkAccess() {
     else if (path.includes('escala.html') && !admin) window.location.href = 'index.html';
 }
 
-// =============================================
-// CARREGAMENTO INICIAL
-// =============================================
-
 document.addEventListener('DOMContentLoaded', function() {
     loadBlockState();
     
@@ -229,7 +210,7 @@ document.addEventListener('DOMContentLoaded', function() {
             showMessage(`⏳ Acesso bloqueado. Tente novamente em ${remaining} minuto(s).`, 'error');
         }
     } else {
-        checkAccess(); // Verifica se pode acessar esta página
+        checkAccess();
         
         const nome = sessionStorage.getItem('nome');
         if (document.getElementById('welcome')) {
