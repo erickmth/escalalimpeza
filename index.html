@@ -60,7 +60,6 @@
             border-left: 4px solid #ffeeba;
         }
         
-        /* Estilos para o loading no botão */
         .btn.loading {
             position: relative;
             color: transparent;
@@ -130,36 +129,26 @@
         </div>
     </div>
     
-    <!-- Modal de Termos de Uso -->
     <div id="termsModal" class="modal">
         <div class="modal-content">
             <span class="close">&times;</span>
             <h2>Termos de Uso</h2>
             <p><strong>Última atualização: 20 de abril de 2025</strong></p>
-            
             <p>Ao acessar e utilizar o site <strong>Escala de Limpeza do Formare</strong>, você concorda com os seguintes Termos de Uso. Se não concordar com algum deles, recomendamos não utilizar o site.</p>
-            
             <h3>1. Objetivo do site</h3>
             <p>Este site foi criado para organizar e facilitar a consulta da escala de limpeza da sala do Formare. A ideia é manter nosso ambiente limpo, organizado e agradável para todos, incentivando o cuidado coletivo com o espaço que compartilhamos todos os dias.</p>
-            
             <h3>2. Acesso ao sistema</h3>
             <p>O acesso é feito apenas por login, com base nas informações cadastradas previamente no sistema. Não há necessidade de criar conta ou fornecer dados além dos que já foram disponibilizados pela turma.</p>
-            
             <h3>3. Uso adequado</h3>
             <p>Este site deve ser utilizado apenas para ver a escala de limpeza. Qualquer tentativa de alterar informações ou acessar áreas indevidas poderá levar ao bloqueio do acesso, incluindo bloqueios baseados no IP do usuário em casos de tentativas repetidas de acesso indevido.</p>
-            
             <h3>4. Privacidade</h3>
             <p>As informações utilizadas, como nome, EDV e turma, são usadas apenas dentro do próprio sistema da escala. Nenhum dado será exposto ou compartilhado fora do grupo da turma.</p>
-            
             <h3>5. Conteúdo do site</h3>
             <p>Todo o conteúdo deste site — como textos, imagens, layout e código — foi feito exclusivamente para uso da turma do Formare. Pedimos que não seja copiado ou alterado sem permissão.</p>
-            
             <h3>6. Atualizações</h3>
             <p>Os Termos de Uso podem ser ajustados se necessário. Qualquer mudança será comunicada diretamente na página.</p>
-            
             <h3>7. Sobre o projeto</h3>
             <p>Este site foi desenvolvido por <strong>Erick Matheus</strong>, aluno do <strong>Formare 2025</strong>, com a intenção de facilitar a organização da turma e promover um ambiente mais limpo e colaborativo.</p>
-            
             <h3>8. Contato</h3>
             <p>Se tiver dúvidas ou sugestões, entre em contato comigo pelo e-mail: 
                 <a href="mailto:erickleguisamon@gmail.com">erickleguisamon@gmail.com</a> 
@@ -168,8 +157,7 @@
                   <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WhatsApp" style="width: 20px; height: 20px; margin-right: 5px;">
                   Fale comigo (Erick)
                 </a>
-              </p>            
-              
+            </p>            
             <div class="terms-footer">
                 <button id="acceptTermsBtn" class="btn">Aceitar Termos</button>
             </div>
@@ -180,62 +168,6 @@
         &copy; 2025 INRB. Todos os direitos reservados.
     </footer>
     
-    <script>
-        // Modal de Termos de Uso
-        const modal = document.getElementById("termsModal");
-        const termsLink = document.getElementById("termsLink");
-        const closeBtn = document.querySelector(".close");
-        const acceptTermsBtn = document.getElementById("acceptTermsBtn");
-        const acceptTermsCheckbox = document.getElementById("acceptTerms");
-        const loginForm = document.getElementById("loginForm");
-        const loginButton = document.getElementById("loginButton");
-
-        // Abrir modal ao clicar no link dos termos
-        termsLink.addEventListener("click", function(e) {
-            e.preventDefault();
-            modal.style.display = "block";
-        });
-
-        // Fechar modal ao clicar no X
-        closeBtn.addEventListener("click", function() {
-            modal.style.display = "none";
-        });
-
-        // Fechar modal ao clicar fora
-        window.addEventListener("click", function(event) {
-            if (event.target === modal) {
-                modal.style.display = "none";
-            }
-        });
-
-        // Aceitar termos
-        acceptTermsBtn.addEventListener("click", function() {
-            acceptTermsCheckbox.checked = true;
-            modal.style.display = "none";
-        });
-
-        // Adicionar loading ao botão quando o formulário for submetido
-        loginForm.addEventListener("submit", function(e) {
-            e.preventDefault();
-            
-            // Ativar estado de loading no botão
-            loginButton.classList.add("loading");
-            loginButton.disabled = true;
-            
-            // Simular delay de 2 segundos para o carregamento
-            setTimeout(function() {
-
-                loginButton.classList.remove("loading");
-                loginButton.disabled = false;
-
-                document.getElementById("message").textContent = "Login realizado com sucesso!";
-                document.getElementById("message").style.display = "block";
-                
-
-                
-            }, 2000); 
-        });
-    </script>
     <script src="script.js"></script>
 </body>
 </html>
