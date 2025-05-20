@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>INRB - Formare 2025</title>
+    <title>INRB - Aprender A+ (Terça-Feira)</title>
     <link rel="stylesheet" href="style.css">
     <link rel="shortcut icon" type="image/x-icon" href="favicon.png">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
@@ -109,7 +109,7 @@
 </head>
 <body>
     <div class="container">
-        <!-- HEADER -->
+        <!-- HEADER COM MENU HAMBURGUER -->
         <div class="header">
             <a href="index.html">
                 <img src="logo.svg" alt="INRB Logo" class="logo" style="cursor: pointer;">
@@ -118,45 +118,68 @@
             <div class="menu-container">
                 <button class="menu-btn" onclick="toggleMenu()">☰</button>
                 <div id="menuOptions" class="menu-options">
-                    <a href="index.html">Início</a>
+                    <a href="formare.html">Voltar</a>
                     <a href="#" onclick="redirectToWhatsApp()">Contato via WhatsApp</a>
-                    <a href="pratica.html">Prática Profissional (Ferramentaria)</a>
                     <a href="index.html">Sair</a>
                 </div>
             </div>
         </div>
-        
-        <!-- CONTEÚDO PRINCIPAL -->
+
         <div class="content">
-            <div id="welcome" class="welcome"></div>
-            <div id="message" class="message" style="display: none;"></div>
-            
             <div class="week-info">
-                <h2>Semana Atual: <span id="currentWeek"></span></h2>
+                <h2>Semana Atual: Semana 1</h2>
             </div>
             
             <div class="schedule">
-                <h3>Escala de Limpeza</h3>
+                <h3>Escala de Prática Profissional:</h3>
                 <table id="scheduleTable">
                     <thead>
                         <tr>
                             <th>Semana</th>
-                            <th>Dupla</th>
+                            <th>Nome do Aluno</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <!-- Preenchido pelo JavaScript -->
+                        <tr>
+                            <td>Semana 1</td>
+                            <td>Nome do Aluno 1</td>
+                        </tr>
+                        <tr>
+                            <td>Semana 2</td>
+                            <td>Nome do Aluno 2</td>
+                        </tr>
+                        <tr>
+                            <td>Semana 3</td>
+                            <td>Nome do Aluno 3</td>
+                        </tr>
+                        <tr>
+                            <td>Semana 4</td>
+                            <td>Nome do Aluno 4</td>
+                        </tr>
+                        <tr>
+                            <td>Semana 5</td>
+                            <td>Nome do Aluno 5</td>
+                        </tr>
+                        <tr>
+                            <td>Semana 6</td>
+                            <td>Nome do Aluno 6</td>
+                        </tr>
+                        <tr>
+                            <td>Semana 7</td>
+                            <td>Nome do Aluno 7</td>
+                        </tr>
+                        <tr>
+                            <td>Semana 8</td>
+                            <td>Nome do Aluno 8</td>
+                        </tr>
                     </tbody>
                 </table>
             </div>
         </div>
-        
-        <!-- FOOTER -->
-        <footer onclick="window.open('https://www.institutorobertbosch.org.br/', '_blank')" style="cursor: pointer;">
-            &copy; 2025 INRB. Todos os direitos reservados.
-        </footer>
     </div>
-
+    <footer onclick="window.open('https://www.institutorobertbosch.org.br/', '_blank')" style="cursor: pointer;">
+        &copy; 2025 INRB. Todos os direitos reservados.
+    </footer>
     <script>
         // Função para alternar o menu
         function toggleMenu() {
@@ -172,6 +195,7 @@
                 menuOptions.classList.remove('show');
             }
         });
+        
         function redirectToWhatsApp() {
             const phoneNumber = "+5541998239031";
             const message = "Olá, estou com dúvidas sobre o site de Escala de limpeza";
@@ -179,6 +203,5 @@
             window.open(url, '_blank');
         }
     </script>
-    <script src="script.js"></script>
 </body>
 </html>
