@@ -183,6 +183,12 @@ function checkAccess() {
     const admin = sessionStorage.getItem('admin') === 'true';
     const path = window.location.pathname;
 
+    // Permite acesso à pratica.html sem login
+    if (path.includes('pratica.html')) {
+        return;
+    }
+
+    // Para todas as outras páginas, verifica o login
     if (!nome || !turma) {
         window.location.href = 'index.html';
         return;
@@ -213,7 +219,7 @@ document.addEventListener('DOMContentLoaded', function() {
         checkAccess();
         
         const nome = sessionStorage.getItem('nome');
-        if (document.getElementById('welcome')) {
+        if (document.getElementById('welcome') && nome) {
             document.getElementById('welcome').textContent = `Bem-vindo(a), ${decodeURIComponent(nome)} 👋`;
         }
         
