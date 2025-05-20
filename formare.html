@@ -116,11 +116,11 @@
             </a>
             
             <div class="menu-container">
-                <button class="menu-btn" onclick="toggleMenu()">☰</button>
+                <button class="menu-btn" onclick="toggleMenu(event)">☰</button>
                 <div id="menuOptions" class="menu-options">
                     <a href="index.html">Início</a>
                     <a href="#" onclick="redirectToWhatsApp1()">Contato via WhatsApp (Erick)</a>
-                     <a href="#" onclick="redirectToWhatsApp()">Contato via WhatsApp (Laura)</a>
+                    <a href="#" onclick="redirectToWhatsApp()">Contato via WhatsApp (Laura)</a>
                     <a href="prtcp.html">Prática Profissional (Ferramentaria)</a>
                     <a href="index.html">Sair</a>
                 </div>
@@ -160,7 +160,8 @@
 
     <script>
         // Função para alternar o menu
-        function toggleMenu() {
+        function toggleMenu(event) {
+            event.stopPropagation(); // Impede que o evento chegue ao document.click
             document.getElementById("menuOptions").classList.toggle("show");
         }
         
@@ -173,12 +174,15 @@
                 menuOptions.classList.remove('show');
             }
         });
+        
         function redirectToWhatsApp1() {
             const phoneNumber = "+5541998239031";
             const message = "Olá, Erick! estou com dúvidas sobre o site de Escala de limpeza";
             const url = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
             window.open(url, '_blank');
-            function redirectToWhatsApp() {
+        }
+        
+        function redirectToWhatsApp() {
             const phoneNumber = "+5541999644705";
             const message = "Olá, Laura! estou com dúvidas sobre o site de Escala de limpeza";
             const url = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
