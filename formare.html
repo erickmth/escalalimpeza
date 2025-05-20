@@ -119,7 +119,8 @@
                 <button class="menu-btn" onclick="toggleMenu()">☰</button>
                 <div id="menuOptions" class="menu-options">
                     <a href="index.html">Início</a>
-                    <a href="#" onclick="redirectToWhatsApp()">Contato via WhatsApp</a>
+                    <a href="#" onclick="redirectToWhatsApp1()">Contato via WhatsApp (Erick)</a>
+                     <a href="#" onclick="redirectToWhatsApp()">Contato via WhatsApp (Laura)</a>
                     <a href="prtcp.html">Prática Profissional (Ferramentaria)</a>
                     <a href="index.html">Sair</a>
                 </div>
@@ -172,9 +173,14 @@
                 menuOptions.classList.remove('show');
             }
         });
-        function redirectToWhatsApp() {
+        function redirectToWhatsApp1() {
             const phoneNumber = "+5541998239031";
-            const message = "Olá, estou com dúvidas sobre o site de Escala de limpeza";
+            const message = "Olá, Erick! estou com dúvidas sobre o site de Escala de limpeza";
+            const url = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
+            window.open(url, '_blank');
+            function redirectToWhatsApp() {
+            const phoneNumber = "+5541999644705";
+            const message = "Olá, Laura! estou com dúvidas sobre o site de Escala de limpeza";
             const url = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
             window.open(url, '_blank');
         }
