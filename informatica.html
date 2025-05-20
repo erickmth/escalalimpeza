@@ -327,9 +327,10 @@
     <footer onclick="window.open('https://www.institutorobertbosch.org.br/', '_blank')" style="cursor: pointer;">
         &copy; 2025 INRB. Todos os direitos reservados.
     </footer>
-    <script>
+<script>
         // Função para alternar o menu
-        function toggleMenu() {
+        function toggleMenu(event) {
+            event.stopPropagation(); // Impede que o evento chegue ao document.click
             document.getElementById("menuOptions").classList.toggle("show");
         }
         
@@ -343,10 +344,16 @@
             }
         });
         
-        // Função para redirecionar para o WhatsApp
+        function redirectToWhatsApp1() {
+            const phoneNumber = "+5541998239031";
+            const message = "Olá, Erick! Eu estou com dúvidas sobre o site de Escala de limpeza";
+            const url = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
+            window.open(url, '_blank');
+        }
+        
         function redirectToWhatsApp() {
-            const phoneNumber = "41998239031";
-            const message = "Olá, gostaria de mais informações sobre...";
+            const phoneNumber = "+5541999644705";
+            const message = "Olá, Laura! Eu estou com dúvidas sobre o site de Escala de limpeza";
             const url = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
             window.open(url, '_blank');
         }
