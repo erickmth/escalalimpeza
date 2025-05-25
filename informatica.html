@@ -3,12 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>INRB - Atividade Complemetar Informática - ETS</title>
+    <title>INRB - Atividade Complementar Informática - ETS</title>
     <link rel="stylesheet" href="style.css">
     <link rel="shortcut icon" type="image/x-icon" href="favicon.png">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
     <style>
-        /* RESET PARA EVITAR SOBREPOSIÇÃO */
         body {
             margin: 0;
             padding: 0;
@@ -16,14 +15,13 @@
             display: flex;
             flex-direction: column;
         }
-        
+
         .container {
             flex: 1;
             display: flex;
             flex-direction: column;
         }
-        
-        /* HEADER REORGANIZADO */
+
         .header {
             display: flex;
             justify-content: space-between;
@@ -34,12 +32,11 @@
             position: relative;
             z-index: 100;
         }
-        
-        /* MENU HAMBURGUER MELHORADO */
+
         .menu-container {
             position: relative;
         }
-        
+
         .menu-btn {
             background: none;
             border: none;
@@ -48,12 +45,12 @@
             padding: 10px 15px;
             color: #333;
         }
-        
+
         .menu-options {
             display: none;
             position: absolute;
             right: 0;
-            top: 100%; /* POSICIONA DIRETAMENTE ABAIXO DO BOTÃO */
+            top: 100%;
             background-color: #fff;
             min-width: 250px;
             box-shadow: 0 8px 16px rgba(0,0,0,0.1);
@@ -62,7 +59,7 @@
             z-index: 101;
             margin-top: 5px;
         }
-        
+
         .menu-options a {
             display: block;
             padding: 15px 20px;
@@ -71,34 +68,32 @@
             border-bottom: 1px solid #f0f0f0;
             transition: all 0.3s;
         }
-        
+
         .menu-options a:last-child {
             border-bottom: none;
         }
-        
+
         .menu-options a:hover {
             background-color: #f5f5f5;
         }
-        
+
         .show {
             display: block;
             animation: fadeIn 0.3s;
         }
-        
+
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(-10px); }
             to { opacity: 1; transform: translateY(0); }
         }
-        
-        /* CONTEÚDO PRINCIPAL */
+
         .content {
             flex: 1;
             padding: 20px;
             position: relative;
             z-index: 1;
         }
-        
-        /* FOOTER */
+
         footer {
             background-color: #f8f8f8;
             padding: 15px;
@@ -109,33 +104,29 @@
 </head>
 <body>
     <div class="container">
-        <!-- HEADER COM MENU HAMBURGUER -->
         <div class="header">
             <a href="index.html">
                 <img src="logo.svg" alt="INRB Logo" class="logo" style="cursor: pointer;">
             </a>
-            
             <div class="menu-container">
                 <button class="menu-btn" onclick="toggleMenu(event)">☰</button>
                 <div id="menuOptions" class="menu-options">
                     <a href="index.html">Início</a>
                     <a href="#" onclick="redirectToWhatsApp1()">Contato via WhatsApp (Erick)</a>
                     <a href="#" onclick="redirectToWhatsApp()">Contato via WhatsApp (Laura)</a>
-                    <a href="prtcp.html">Prática Profissional (Ferramentaria)</a>
                     <a href="index.html">Sair</a>
                 </div>
             </div>
         </div>
-        
+
         <div id="welcome" class="welcome"></div>
-        <div id="turma-info" class="turma-info">Você está logado na turma: <strong>Atividade Complemetar Informática - ETS</strong></div>
+        <div id="turma-info" class="turma-info">Você está logado na turma: <strong>Atividade Complementar Informática - ETS</strong></div>
         <div id="message" class="message" style="display: none;"></div>
-        
+
         <div class="content">
             <div class="week-info">
                 <h2>Semana Atual: <span id="currentWeek"></span></h2>
             </div>
-            
             <div class="schedule">
                 <h3>Escala de Limpeza</h3>
                 <table id="scheduleTable">
@@ -152,215 +143,39 @@
             </div>
         </div>
     </div>
+
     <footer onclick="window.open('https://www.institutorobertbosch.org.br/', '_blank')" style="cursor: pointer;">
         &copy; 2025 INRB. Todos os direitos reservados.
     </footer>
+
     <script>
-        // Função para alternar o menu
-        function toggleMenu() {
-            document.getElementById("menuOptions").classList.toggle("show");
-        }
-        
-        // Fechar o menu se clicar fora dele
-        document.addEventListener('click', function(event) {
-            const menuOptions = document.getElementById("menuOptions");
-            const menuBtn = document.querySelector('.menu-btn');
-            
-            if (!menuOptions.contains(event.target) && event.target !== menuBtn) {
-                menuOptions.classList.remove('show');
-            }
-        });
-        
-        
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>INRB - Atividade Complemetar Informática - ETS</title>
-    <link rel="stylesheet" href="style.css">
-    <link rel="shortcut icon" type="image/x-icon" href="favicon.png">
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
-    <style>
-        /* RESET PARA EVITAR SOBREPOSIÇÃO */
-        body {
-            margin: 0;
-            padding: 0;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-        }
-        
-        .container {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-        }
-        
-        /* HEADER REORGANIZADO */
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 15px;
-            background-color: #fff;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-            position: relative;
-            z-index: 100;
-        }
-        
-        /* MENU HAMBURGUER MELHORADO */
-        .menu-container {
-            position: relative;
-        }
-        
-        .menu-btn {
-            background: none;
-            border: none;
-            font-size: 32px;
-            cursor: pointer;
-            padding: 10px 15px;
-            color: #333;
-        }
-        
-        .menu-options {
-            display: none;
-            position: absolute;
-            right: 0;
-            top: 100%; /* POSICIONA DIRETAMENTE ABAIXO DO BOTÃO */
-            background-color: #fff;
-            min-width: 250px;
-            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
-            border-radius: 8px;
-            overflow: hidden;
-            z-index: 101;
-            margin-top: 5px;
-        }
-        
-        .menu-options a {
-            display: block;
-            padding: 15px 20px;
-            text-decoration: none;
-            color: #333;
-            border-bottom: 1px solid #f0f0f0;
-            transition: all 0.3s;
-        }
-        
-        .menu-options a:last-child {
-            border-bottom: none;
-        }
-        
-        .menu-options a:hover {
-            background-color: #f5f5f5;
-        }
-        
-        .show {
-            display: block;
-            animation: fadeIn 0.3s;
-        }
-        
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(-10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        
-        /* CONTEÚDO PRINCIPAL */
-        .content {
-            flex: 1;
-            padding: 20px;
-            position: relative;
-            z-index: 1;
-        }
-        
-        /* FOOTER */
-        footer {
-            background-color: #f8f8f8;
-            padding: 15px;
-            text-align: center;
-            margin-top: auto;
-        }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <!-- HEADER COM MENU HAMBURGUER -->
-        <div class="header">
-            <a href="index.html">
-                <img src="logo.svg" alt="INRB Logo" class="logo" style="cursor: pointer;">
-            </a>
-            
-            <div class="menu-container">
-                <button class="menu-btn" onclick="toggleMenu()">☰</button>
-                <div id="menuOptions" class="menu-options">
-                    <a href="index.html">Início</a>
-                    <a href="#" onclick="redirectToWhatsApp()">Contato via WhatsApp</a>
-                    <a href="index.html">Sair</a>
-                </div>
-            </div>
-        </div>
-        
-        <div id="welcome" class="welcome"></div>
-        <div id="turma-info" class="turma-info">Você está logado na turma: <strong>Atividade Complemetar Informática - ETS</strong></div>
-        <div id="message" class="message" style="display: none;"></div>
-        
-        <div class="content">
-            <div class="week-info">
-                <h2>Semana Atual: <span id="currentWeek"></span></h2>
-            </div>
-            
-            <div class="schedule">
-                <h3>Escala de Limpeza</h3>
-                <table id="scheduleTable">
-                    <thead>
-                        <tr>
-                            <th>Semana</th>
-                            <th>Dupla</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <!-- Preenchido pelo JavaScript -->
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </div>
-    <footer onclick="window.open('https://www.institutorobertbosch.org.br/', '_blank')" style="cursor: pointer;">
-        &copy; 2025 INRB. Todos os direitos reservados.
-    </footer>
-<script>
-        // Função para alternar o menu
         function toggleMenu(event) {
-            event.stopPropagation(); // Impede que o evento chegue ao document.click
+            event.stopPropagation();
             document.getElementById("menuOptions").classList.toggle("show");
         }
-        
-        // Fechar o menu se clicar fora dele
+
         document.addEventListener('click', function(event) {
             const menuOptions = document.getElementById("menuOptions");
             const menuBtn = document.querySelector('.menu-btn');
-            
+
             if (!menuOptions.contains(event.target) && event.target !== menuBtn) {
                 menuOptions.classList.remove('show');
             }
         });
-        
+
         function redirectToWhatsApp1() {
             const phoneNumber = "+5541998239031";
             const message = "Olá, Erick! Eu estou com dúvidas sobre o site de Escala de limpeza";
             const url = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
             window.open(url, '_blank');
         }
-        
+
         function redirectToWhatsApp() {
             const phoneNumber = "+5541999644705";
             const message = "Olá, Laura! Eu estou com dúvidas sobre o site de Escala de limpeza";
             const url = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
             window.open(url, '_blank');
         }
-    </script>
-    <script src="script.js"></script>
-</body>
-</html>
     </script>
     <script src="script.js"></script>
 </body>
