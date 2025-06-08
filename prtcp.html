@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>INRB - Aprender A+ (Terça-Feira)</title>
+    <title>INRB - Prática Profissional (TEF 04)</title>
     <link rel="stylesheet" href="style.css">
     <link rel="shortcut icon" type="image/x-icon" href="favicon.png">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
@@ -15,6 +15,7 @@
             min-height: 100vh;
             display: flex;
             flex-direction: column;
+            font-family: 'Roboto', sans-serif;
         }
         
         .container {
@@ -53,7 +54,7 @@
             display: none;
             position: absolute;
             right: 0;
-            top: 100%; /* POSICIONA DIRETAMENTE ABAIXO DO BOTÃO */
+            top: 100%;
             background-color: #fff;
             min-width: 250px;
             box-shadow: 0 8px 16px rgba(0,0,0,0.1);
@@ -96,6 +97,9 @@
             padding: 20px;
             position: relative;
             z-index: 1;
+            max-width: 800px;
+            margin: 0 auto;
+            width: 100%;
         }
         
         /* FOOTER */
@@ -104,6 +108,47 @@
             padding: 15px;
             text-align: center;
             margin-top: auto;
+        }
+        
+        /* ESTILOS DA TABELA MELHORADOS */
+        .schedule {
+            margin-top: 20px;
+            margin-bottom: 40px;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        th {
+            background-color: #f8f8f8;
+            font-weight: 500;
+        }
+        
+        tr:hover {
+            background-color: #f5f5f5;
+        }
+        
+        .current-week {
+            background-color: #e6f7ff;
+            font-weight: 500;
+        }
+        
+        /* INFO DO MÊS */
+        .month-title {
+            font-size: 1.2em;
+            font-weight: 500;
+            margin-bottom: 10px;
+            color: #333;
         }
     </style>
 </head>
@@ -115,61 +160,79 @@
                 <img src="logo.svg" alt="INRB Logo" class="logo" style="cursor: pointer;">
             </a>
             
+
             <div class="menu-container">
-                <button class="menu-btn" onclick="toggleMenu()">☰</button>
+                <button class="menu-btn" onclick="toggleMenu(event)">☰</button>
                 <div id="menuOptions" class="menu-options">
-                    <a href="formare.html">Voltar</a>
-                    <a href="#" onclick="redirectToWhatsApp()">Contato via WhatsApp</a>
+                    <a href="index.html">Início</a>
+                    <a href="#" onclick="redirectToWhatsApp1()">Contato via WhatsApp (Erick)</a>
+                    <a href="#" onclick="redirectToWhatsApp()">Contato via WhatsApp (Laura)</a>
                     <a href="index.html">Sair</a>
                 </div>
             </div>
         </div>
 
         <div class="content">
-            <div class="week-info">
-                <h2>Semana Atual: Semana 1</h2>
-            </div>
+            <!-- MÊS 01 -->
+            <div class="month-title">Mês 01</div>
             
             <div class="schedule">
                 <h3>Escala de Prática Profissional:</h3>
-                <table id="scheduleTable">
+                <table>
                     <thead>
                         <tr>
-                            <th>Semana</th>
+                            <th style="width: 30%;">Semana</th>
+                            <th>Nome do Aluno</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="current-week">
+                            <td>Semana 01</td>
+                            <td>Erick Matheus Leguisamon</td>
+                        </tr>
+                        <tr>
+                            <td>Semana 02</td>
+                            <td>Anna Júlia Zanini Rodrigues</td>
+                        </tr>
+                        <tr>
+                            <td>Semana 03</td>
+                            <td>Victor Silva de Lima</td>
+                        </tr>
+                        <tr>
+                            <td>Semana 04</td>
+                            <td>Julia Gabrielly Marques Rodrigues</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <!-- MÊS 02 -->
+            <div class="month-title">Mês 02</div>
+            
+            <div class="schedule">
+                <h3>Escala de Prática Profissional:</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th style="width: 30%;">Semana</th>
                             <th>Nome do Aluno</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr>
-                            <td>Semana 1</td>
-                            <td>Nome do Aluno 1</td>
-                        </tr>
-                        <tr>
-                            <td>Semana 2</td>
-                            <td>Nome do Aluno 2</td>
-                        </tr>
-                        <tr>
-                            <td>Semana 3</td>
-                            <td>Nome do Aluno 3</td>
-                        </tr>
-                        <tr>
-                            <td>Semana 4</td>
-                            <td>Nome do Aluno 4</td>
-                        </tr>
-                        <tr>
-                            <td>Semana 5</td>
+                            <td>Semana 01</td>
                             <td>Nome do Aluno 5</td>
                         </tr>
                         <tr>
-                            <td>Semana 6</td>
+                            <td>Semana 02</td>
                             <td>Nome do Aluno 6</td>
                         </tr>
                         <tr>
-                            <td>Semana 7</td>
+                            <td>Semana 03</td>
                             <td>Nome do Aluno 7</td>
                         </tr>
                         <tr>
-                            <td>Semana 8</td>
+                            <td>Semana 04</td>
                             <td>Nome do Aluno 8</td>
                         </tr>
                     </tbody>
@@ -177,28 +240,35 @@
             </div>
         </div>
     </div>
+    
     <footer onclick="window.open('https://www.institutorobertbosch.org.br/', '_blank')" style="cursor: pointer;">
         &copy; 2025 INRB. Todos os direitos reservados.
     </footer>
-    <script>
-        // Função para alternar o menu
-        function toggleMenu() {
+    
+ <script>
+        function toggleMenu(event) {
+            event.stopPropagation();
             document.getElementById("menuOptions").classList.toggle("show");
         }
-        
-        // Fechar o menu se clicar fora dele
+
         document.addEventListener('click', function(event) {
             const menuOptions = document.getElementById("menuOptions");
             const menuBtn = document.querySelector('.menu-btn');
-            
             if (!menuOptions.contains(event.target) && event.target !== menuBtn) {
                 menuOptions.classList.remove('show');
             }
         });
-        
-        function redirectToWhatsApp() {
+
+        function redirectToWhatsApp1() {
             const phoneNumber = "+5541998239031";
-            const message = "Olá, estou com dúvidas sobre o site de Escala de limpeza";
+            const message = "Olá, Erick!";
+            const url = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
+            window.open(url, '_blank');
+        }
+
+        function redirectToWhatsApp() {
+            const phoneNumber = "+5541999644705";
+            const message = "Olá, Laura!";
             const url = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
             window.open(url, '_blank');
         }
