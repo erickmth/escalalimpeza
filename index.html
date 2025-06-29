@@ -100,7 +100,8 @@
             <form id="loginForm">
                 <div class="form-group">
                     <label for="turma">Turma:</label>
-                    <select id="turma" name="turma" required>
+                    <select id="turma" name="turma" requir
+                        ed>
                         <option value="" disabled selected>Selecione sua turma</option>
                         <option value="Formare 2025">Formare 2025</option>
                         <option value="Aprender A+ (Terça-Feira)">Aprender A+ (Terça-Feira)</option>
@@ -111,10 +112,11 @@
                     </select>
                 </div>
                 
-                <div class="form-group">
-                    <label for="edv">EDV:</label>
-                    <input type="text" id="edv" name="edv" placeholder="Digite seu EDV" required>
-                </div>
+<div class="form-group">
+    <label for="edv">EDV:</label>
+    <input type="number" id="edv" name="edv" placeholder="Digite seu EDV" required 
+           pattern="[0-9]*" inputmode="numeric">
+</div>
                 
                 <div class="terms-checkbox">
                     <input type="checkbox" id="acceptTerms" required>
