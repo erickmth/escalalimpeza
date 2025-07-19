@@ -4,18 +4,36 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>INRB - Prática Profissional (TEF)</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="shortcut icon" type="image/x-icon" href="favicon.png">
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        /* RESET PARA EVITAR SOBREPOSIÇÃO */
-        body {
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --accent-color: #e74c3c;
+            --light-color: #ecf0f1;
+            --dark-color: #2c3e50;
+            --success-color: #2ecc71;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --border-radius: 8px;
+            --transition: all 0.3s ease;
+        }
+        
+        * {
             margin: 0;
             padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f5f7fa;
+            color: var(--dark-color);
+            line-height: 1.6;
             min-height: 100vh;
             display: flex;
             flex-direction: column;
-            font-family: 'Roboto', sans-serif;
         }
         
         .container {
@@ -24,19 +42,29 @@
             flex-direction: column;
         }
         
-        /* HEADER REORGANIZADO */
+        /* HEADER STYLES */
         .header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 15px;
-            background-color: #fff;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-            position: relative;
-            z-index: 100;
+            padding: 1rem 2rem;
+            background-color: white;
+            box-shadow: var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
         }
         
-        /* MENU HAMBURGUER MELHORADO */
+        .logo {
+            height: 50px;
+            transition: var(--transition);
+        }
+        
+        .logo:hover {
+            opacity: 0.9;
+        }
+        
+        /* MENU STYLES */
         .menu-container {
             position: relative;
         }
@@ -44,10 +72,15 @@
         .menu-btn {
             background: none;
             border: none;
-            font-size: 32px;
+            font-size: 1.5rem;
             cursor: pointer;
-            padding: 10px 15px;
-            color: #333;
+            padding: 0.5rem;
+            color: var(--primary-color);
+            transition: var(--transition);
+        }
+        
+        .menu-btn:hover {
+            color: var(--secondary-color);
         }
         
         .menu-options {
@@ -55,293 +88,475 @@
             position: absolute;
             right: 0;
             top: 100%;
-            background-color: #fff;
+            background-color: white;
             min-width: 250px;
-            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
-            border-radius: 8px;
+            box-shadow: var(--shadow);
+            border-radius: var(--border-radius);
             overflow: hidden;
-            z-index: 101;
-            margin-top: 5px;
+            z-index: 1001;
+            margin-top: 0.5rem;
+            animation: fadeIn 0.3s;
         }
         
         .menu-options a {
-            display: block;
-            padding: 15px 20px;
+            display: flex;
+            align-items: center;
+            padding: 0.75rem 1.5rem;
             text-decoration: none;
-            color: #333;
-            border-bottom: 1px solid #f0f0f0;
-            transition: all 0.3s;
-        }
-        
-        .menu-options a:last-child {
-            border-bottom: none;
+            color: var(--dark-color);
+            transition: var(--transition);
         }
         
         .menu-options a:hover {
-            background-color: #f5f5f5;
+            background-color: var(--light-color);
+            color: var(--secondary-color);
+        }
+        
+        .menu-options a i {
+            margin-right: 0.75rem;
+            width: 20px;
+            text-align: center;
         }
         
         .show {
             display: block;
-            animation: fadeIn 0.3s;
         }
         
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(-10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        
-        /* CONTEÚDO PRINCIPAL */
+        /* MAIN CONTENT */
         .content {
             flex: 1;
-            padding: 20px;
-            position: relative;
-            z-index: 1;
-            max-width: 800px;
+            padding: 2rem;
+            max-width: 1000px;
             margin: 0 auto;
             width: 100%;
         }
         
-        /* FOOTER */
-        footer {
-            background-color: #f8f8f8;
-            padding: 15px;
-            text-align: center;
-            margin-top: auto;
+        /* MONTH SECTION */
+        .month-section {
+            margin-bottom: 2.5rem;
+            background: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            transition: var(--transition);
         }
         
-        /* ESTILOS DA TABELA MELHORADOS */
+        .month-section:hover {
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+        
+        .month-title {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 1rem 1.5rem;
+            font-size: 1.2rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+        }
+        
+        .month-title i {
+            margin-right: 0.75rem;
+        }
+        
         .schedule {
-            margin-top: 20px;
-            margin-bottom: 40px;
+            padding: 1.5rem;
         }
         
+        .schedule h3 {
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+            font-weight: 500;
+            border-left: 4px solid var(--secondary-color);
+            padding-left: 0.75rem;
+        }
+        
+        /* TABLE STYLES */
         table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 15px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            margin-top: 1rem;
         }
         
         th, td {
-            padding: 12px 15px;
+            padding: 1rem;
             text-align: left;
-            border-bottom: 1px solid #ddd;
+            border-bottom: 1px solid #e0e0e0;
         }
         
         th {
-            background-color: #f8f8f8;
-            font-weight: 500;
+            background-color: #f8f9fa;
+            font-weight: 600;
+            color: var(--primary-color);
+            text-transform: uppercase;
+            font-size: 0.8rem;
+            letter-spacing: 0.5px;
         }
         
         tr:hover {
-            background-color: #f5f5f5;
+            background-color: #f8f9fa;
         }
         
-        .current-week {
-            background-color: #e6f7ff;
+        .current-practice {
+            background-color: rgba(46, 204, 113, 0.1) !important;
+            position: relative;
             font-weight: 500;
+            animation: pulse 2s infinite;
         }
         
-        /* INFO DO MÊS */
-        .month-title {
-            font-size: 1.2em;
-            font-weight: 500;
-            margin-bottom: 10px;
-            color: #333;
+        .current-practice::after {
+            content: "⚡ Ativo agora";
+            position: absolute;
+            right: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            background-color: var(--success-color);
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
         }
-
-        .cordotxt{
-            color: black;
-            width: 30%;
+        
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(46, 204, 113, 0.4); }
+            70% { box-shadow: 0 0 0 8px rgba(46, 204, 113, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(46, 204, 113, 0); }
+        }
+        
+        /* FOOTER */
+        footer {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 1.5rem;
+            text-align: center;
+            margin-top: 2rem;
+            font-size: 0.9rem;
+            transition: var(--transition);
+        }
+        
+        footer:hover {
+            background-color: #1a252f;
+            cursor: pointer;
+        }
+        
+        /* RESPONSIVE DESIGN */
+        @media (max-width: 768px) {
+            .header {
+                padding: 1rem;
+            }
+            
+            .content {
+                padding: 1rem;
+            }
+            
+            .month-title {
+                font-size: 1.1rem;
+                padding: 0.75rem 1rem;
+            }
+            
+            .schedule {
+                padding: 1rem;
+            }
+            
+            th, td {
+                padding: 0.75rem;
+                font-size: 0.9rem;
+            }
+            
+            .current-practice::after {
+                content: "⚡";
+                padding: 0.2rem;
+                right: 0.5rem;
+                font-size: 0.7rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .menu-options {
+                min-width: 200px;
+            }
+            
+            table {
+                display: block;
+                overflow-x: auto;
+            }
+            
+            .current-practice::after {
+                display: none;
+            }
+            
+            .current-practice td:last-child::after {
+                content: " ⚡";
+                color: var(--success-color);
+            }
+        }
+        
+        /* UTILITY CLASSES */
+        .text-center {
+            text-align: center;
+        }
+        
+        .mb-3 {
+            margin-bottom: 1.5rem;
+        }
+        
+        /* ANIMATIONS */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <!-- HEADER COM MENU HAMBURGUER -->
+        <!-- HEADER WITH HAMBURGER MENU -->
         <div class="header">
             <a href="index.html">
-                <img src="logo.svg" alt="INRB Logo" class="logo" style="cursor: pointer;">
+                <img src="logo.svg" alt="INRB Logo" class="logo">
             </a>
             
-
             <div class="menu-container">
-                <button class="menu-btn" onclick="toggleMenu(event)">☰</button>
+                <button class="menu-btn" onclick="toggleMenu(event)"><i class="fas fa-bars"></i></button>
                 <div id="menuOptions" class="menu-options">
-                    <a href="index.html">Início</a>
-                    <a href="#" onclick="redirectToWhatsApp1()">Contato via WhatsApp (Erick)</a>
-                    <a href="#" onclick="redirectToWhatsApp()">Contato via WhatsApp (Laura)</a>
-                    <a href="index.html">Sair</a>
+                    <a href="index.html"><i class="fas fa-home"></i> Início</a>
+                    <a href="#" onclick="redirectToWhatsApp1()"><i class="fab fa-whatsapp"></i> Contato (Erick)</a>
+                    <a href="#" onclick="redirectToWhatsApp()"><i class="fab fa-whatsapp"></i> Contato (Laura)</a>
+                    <a href="index.html"><i class="fas fa-sign-out-alt"></i> Sair</a>
                 </div>
             </div>
         </div>
 
         <div class="content">
-<!-- MÊS 01 -->
-<div class="month-title">Mês 01</div>
-<div class="schedule">
-    <h3>Escala de Prática Profissional:</h3>
-    <table>
-        <thead>
-            <tr>
-                <th class="cordotxt">Semana</th>
-                <th>Nome do Aluno</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td>Semana 01</td>
-                <td>Erick Matheus Leguisamon</td>
-            </tr>
-            <tr>
-                <td>Semana 02 - 23/06 a 27/06 (KW 26)</td>
-                <td>Anna Júlia Zanini Rodrigues</td>
-            </tr>
-            <tr>
-                <td>Semana 03 - 30/06 a 04/07 (KW 27)</td>
-                <td>Victor Silva de Lima</td>
-            </tr>
-            <tr>
-                <td>Semana 04 - 07/07 a 11/07 (KW 28)</td>
-                <td>Julia Gabrielly Marques Rodrigues</td>
-            </tr>
-        </tbody>
-    </table>
-</div>
+            <!-- MONTH 01 -->
+            <div class="month-section">
+                <div class="month-title">
+                    <i class="far fa-calendar-alt"></i> Mês 01
+                </div>
+                <div class="schedule">
+                    <h3>Escala de Prática Profissional:</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th style="width: 30%;">Semana</th>
+                                <th>Nome do Aluno</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Semana 01</td>
+                                <td>Erick Matheus Leguisamon</td>
+                            </tr>
+                            <tr>
+                                <td>Semana 02 - 23/06 a 27/06 (KW 26)</td>
+                                <td>Anna Júlia Zanini Rodrigues</td>
+                            </tr>
+                            <tr>
+                                <td>Semana 03 - 30/06 a 04/07 (KW 27)</td>
+                                <td>Victor Silva de Lima</td>
+                            </tr>
+                            <tr>
+                                <td>Semana 04 - 07/07 a 11/07 (KW 28)</td>
+                                <td>Julia Gabrielly Marques Rodrigues</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
 
-<!-- MÊS 02 -->
-<div class="month-title">Mês 02</div>
-<div class="schedule">
-    <h3>Escala de Prática Profissional:</h3>
-    <table>
-        <thead>
-            <tr>
-                <th style="width: 30%;">Semana</th>
-                <th>Nome do Aluno</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td>Semana 05 - 14/07 a 18/07 (KW 29)</td>
-                <td>Rafael da Silva de Quadros</td>
-            </tr>
-            <tr>
-                <td>Semana 06 - 21/07 a 25/07 (KW 30)</td>
-                <td>Ana Clara Da Silva Maia Gimenes</td>
-            </tr>
-            <tr>
-                <td>Semana 07 - 28/07 a 01/08 (KW 31)</td>
-                <td>Pedro Henrique de Almeida Lobo</td>
-            </tr>
-            <tr>
-                <td>Semana 08 - 04/08 a 08/08 (KW 32)</td>
-                <td>Laura Narciso Kopp</td>
-            </tr>
-        </tbody>
-    </table>
-</div>
+            <!-- MONTH 02 -->
+            <div class="month-section">
+                <div class="month-title">
+                    <i class="far fa-calendar-alt"></i> Mês 02
+                </div>
+                <div class="schedule">
+                    <h3>Escala de Prática Profissional:</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th style="width: 30%;">Semana</th>
+                                <th>Nome do Aluno</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Semana 05 - 14/07 a 18/07 (KW 29)</td>
+                                <td>Rafael da Silva de Quadros</td>
+                            </tr>
+                            <tr>
+                                <td>Semana 06 - 21/07 a 25/07 (KW 30)</td>
+                                <td>Ana Clara Da Silva Maia Gimenes</td>
+                            </tr>
+                            <tr>
+                                <td>Semana 07 - 28/07 a 01/08 (KW 31)</td>
+                                <td>Pedro Henrique de Almeida Lobo</td>
+                            </tr>
+                            <tr>
+                                <td>Semana 08 - 04/08 a 08/08 (KW 32)</td>
+                                <td>Laura Narciso Kopp</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
 
-<!-- MÊS 03 -->
-<div class="month-title">Mês 03</div>
-<div class="schedule">
-    <h3>Escala de Prática Profissional:</h3>
-    <table>
-        <thead>
-            <tr>
-                <th style="width: 30%; color: black;">Semana</th>
-                <th>Nome do Aluno</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td>Semana 09 - 11/08 a 15/08 (KW 33)</td>
-                <td>Matheus Vinicius Veiga Gois</td>
-            </tr>
-            <tr>
-                <td>Semana 10 - 18/08 a 22/08 (KW 34)</td>
-                <td>Eduarda dos Santos Mendes</td>
-            </tr>
-            <tr>
-                <td>Semana 11 - 25/08 a 29/08 (KW 35)</td>
-                <td>Conrado Juliano Lourenço de Souza</td>
-            </tr>
-            <tr>
-                <td>Semana 12 - 01/09 a 05/09 (KW 36)</td>
-                <td>David Henrique Dias Calciolari De Matos</td>
-            </tr>
-        </tbody>
-    </table>
-</div>
+            <!-- MONTH 03 -->
+            <div class="month-section">
+                <div class="month-title">
+                    <i class="far fa-calendar-alt"></i> Mês 03
+                </div>
+                <div class="schedule">
+                    <h3>Escala de Prática Profissional:</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th style="width: 30%;">Semana</th>
+                                <th>Nome do Aluno</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Semana 09 - 11/08 a 15/08 (KW 33)</td>
+                                <td>Matheus Vinicius Veiga Gois</td>
+                            </tr>
+                            <tr>
+                                <td>Semana 10 - 18/08 a 22/08 (KW 34)</td>
+                                <td>Eduarda dos Santos Mendes</td>
+                            </tr>
+                            <tr>
+                                <td>Semana 11 - 25/08 a 29/08 (KW 35)</td>
+                                <td>Conrado Juliano Lourenço de Souza</td>
+                            </tr>
+                            <tr>
+                                <td>Semana 12 - 01/09 a 05/09 (KW 36)</td>
+                                <td>David Henrique Dias Calciolari De Matos</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
 
-<!-- MÊS 04 -->
-<div class="month-title">Mês 04</div>
-<div class="schedule">
-    <h3>Escala de Prática Profissional:</h3>
-    <table>
-        <thead>
-            <tr>
-                <th style="width: 30%; color: black;">Semana</th>
-                <th>Nome do Aluno</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td>Semana 13 - 08/09 a 12/09 (KW 37)</td>
-                <td>Milena da Silva Lima</td>
-            </tr>
-            <tr>
-                <td>Semana 14 - 15/09 a 19/09 (KW 38)</td>
-                <td>Mariana Flores de Almeira</td>
-            </tr>
-            <tr>
-                <td>Semana 15 - 22/09 a 26/09 (KW 39)</td>
-                <td>Nicoly Lopes dos Santos</td>
-            </tr>
-            <tr>
-                <td>Semana 16 - 29/09 a 03/10 (KW 40)</td>
-                <td>Thais dos Santos Lino</td>
-            </tr>
-        </tbody>
-    </table>
-</div>
+            <!-- MONTH 04 -->
+            <div class="month-section">
+                <div class="month-title">
+                    <i class="far fa-calendar-alt"></i> Mês 04
+                </div>
+                <div class="schedule">
+                    <h3>Escala de Prática Profissional:</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th style="width: 30%;">Semana</th>
+                                <th>Nome do Aluno</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Semana 13 - 08/09 a 12/09 (KW 37)</td>
+                                <td>Milena da Silva Lima</td>
+                            </tr>
+                            <tr>
+                                <td>Semana 14 - 15/09 a 19/09 (KW 38)</td>
+                                <td>Mariana Flores de Almeira</td>
+                            </tr>
+                            <tr>
+                                <td>Semana 15 - 22/09 a 26/09 (KW 39)</td>
+                                <td>Nicoly Lopes dos Santos</td>
+                            </tr>
+                            <tr>
+                                <td>Semana 16 - 29/09 a 03/10 (KW 40)</td>
+                                <td>Thais dos Santos Lino</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
 
-<!-- MÊS 05 -->
-<div class="month-title">Mês 05</div>
-<div class="schedule">
-    <h3>Escala de Prática Profissional:</h3>
-    <table>
-        <thead>
-            <tr>
-                <th style="width: 30%; color: black;">Semana</th>
-                <th>Nome do Aluno</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td>Semana 17 - 06/10 a 10/10 (KW 41)</td>
-                <td>Raquel Duarte dos Santos</td>
-            </tr>
-            <tr>
-                <td>Semana 18 - 13/10 a 17/10 (KW 42)</td>
-                <td>Nathalia Quenupe de Lara</td>
-            </tr>
-        </tbody>
-    </table>
-</div>
+            <!-- MONTH 05 -->
+            <div class="month-section">
+                <div class="month-title">
+                    <i class="far fa-calendar-alt"></i> Mês 05
+                </div>
+                <div class="schedule">
+                    <h3>Escala de Prática Profissional:</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th style="width: 30%;">Semana</th>
+                                <th>Nome do Aluno</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Semana 17 - 06/10 a 10/10 (KW 41)</td>
+                                <td>Raquel Duarte dos Santos</td>
+                            </tr>
+                            <tr>
+                                <td>Semana 18 - 13/10 a 17/10 (KW 42)</td>
+                                <td>Nathalia Quenupe de Lara</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
     </div>
     
-    <footer onclick="window.open('https://www.institutorobertbosch.org.br/', '_blank')" style="cursor: pointer;">
+    <footer onclick="window.open('https://www.institutorobertbosch.org.br/', '_blank')">
         &copy; 2025 INRB. Todos os direitos reservados.
     </footer>
     
- <script>
+    <script>
+        // Function to highlight current practice week (considering full week including weekends)
+        function highlightCurrentPractice() {
+            const today = new Date();
+            today.setHours(0, 0, 0, 0); // Normalize time to midnight for accurate comparison
+            
+            const rows = document.querySelectorAll('tbody tr');
+            
+            rows.forEach(row => {
+                const weekText = row.cells[0].textContent;
+                const dateMatch = weekText.match(/(\d{2})\/(\d{2}) a (\d{2})\/(\d{2})/);
+                
+                if (dateMatch) {
+                    const startDay = parseInt(dateMatch[1]);
+                    const startMonth = parseInt(dateMatch[2]) - 1; // Months are 0-indexed
+                    const currentYear = today.getFullYear();
+                    
+                    // Create start date (Monday)
+                    const startDate = new Date(currentYear, startMonth, startDay);
+                    startDate.setHours(0, 0, 0, 0);
+                    
+                    // Calculate end date (Sunday) - start date + 6 days
+                    const endDate = new Date(startDate);
+                    endDate.setDate(startDate.getDate() + 6);
+                    endDate.setHours(23, 59, 59, 999);
+                    
+                    // Check if today falls within this week (Mon-Sun)
+                    if (today >= startDate && today <= endDate) {
+                        row.classList.add('current-practice');
+                        
+                        // Add visual indicator for weekends if today is weekend
+                        const dayOfWeek = today.getDay(); // 0 = Sunday, 6 = Saturday
+                        if (dayOfWeek === 0 || dayOfWeek === 6) {
+                            const weekendIndicator = document.createElement('span');
+                            weekendIndicator.textContent = ' ';
+                            weekendIndicator.style.fontSize = '0.8em';
+                            weekendIndicator.style.color = '#666';
+                            row.cells[1].appendChild(weekendIndicator);
+                        }
+                    }
+                }
+            });
+        }
+        
+        // Menu functions
         function toggleMenu(event) {
             event.stopPropagation();
             document.getElementById("menuOptions").classList.toggle("show");
         }
-
+        
         document.addEventListener('click', function(event) {
             const menuOptions = document.getElementById("menuOptions");
             const menuBtn = document.querySelector('.menu-btn');
@@ -349,20 +564,35 @@
                 menuOptions.classList.remove('show');
             }
         });
-
+        
+        // WhatsApp functions
         function redirectToWhatsApp1() {
             const phoneNumber = "+5541998239031";
             const message = "Olá, Erick!";
             const url = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
             window.open(url, '_blank');
         }
-
+        
         function redirectToWhatsApp() {
             const phoneNumber = "+5541999644705";
             const message = "Olá, Laura!";
             const url = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
             window.open(url, '_blank');
         }
+        
+        // Initialize functions when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            highlightCurrentPractice();
+            
+            // Close menu when clicking outside
+            document.addEventListener('click', function(event) {
+                const menuOptions = document.getElementById("menuOptions");
+                const menuBtn = document.querySelector('.menu-btn');
+                if (!menuOptions.contains(event.target) && event.target !== menuBtn) {
+                    menuOptions.classList.remove('show');
+                }
+            });
+        });
     </script>
 </body>
 </html>
