@@ -175,6 +175,38 @@
         &copy; 2025 INRB. Todos os direitos reservados.
     </footer>
     
-    <script src="script.js"></script>
+    <script src="script.js">
+        <script>
+    // Modal de Termos de Uso
+    const termsModal = document.getElementById('termsModal');
+    const termsLink = document.getElementById('termsLink');
+    const closeModal = document.querySelector('.close');
+    const acceptTermsBtn = document.getElementById('acceptTermsBtn');
+
+    // Abrir modal quando clicar no link dos termos
+    termsLink.addEventListener('click', function(e) {
+        e.preventDefault();
+        termsModal.style.display = 'block';
+    });
+
+    // Fechar modal quando clicar no X
+    closeModal.addEventListener('click', function() {
+        termsModal.style.display = 'none';
+    });
+
+    // Fechar modal quando clicar fora do conteúdo
+    window.addEventListener('click', function(event) {
+        if (event.target === termsModal) {
+            termsModal.style.display = 'none';
+        }
+    });
+
+    // Aceitar termos e fechar modal
+    acceptTermsBtn.addEventListener('click', function() {
+        document.getElementById('acceptTerms').checked = true;
+        termsModal.style.display = 'none';
+    });
+</script>
+    </script>
 </body>
 </html>
