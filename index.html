@@ -11,7 +11,7 @@
         .modal {
             display: none;
             position: fixed;
-            z-index: 1000;
+            z-index: 9999;
             left: 0;
             top: 0;
             width: 100%;
@@ -100,8 +100,7 @@
             <form id="loginForm">
                 <div class="form-group">
                     <label for="turma">Turma:</label>
-                    <select id="turma" name="turma" requir
-                        ed>
+                    <select id="turma" name="turma" required>
                         <option value="" disabled selected>Selecione sua turma</option>
                         <option value="Formare 2025">Formare 2025</option>
                         <option value="Aprender A+ (Terça-Feira)">Aprender A+ (Terça-Feira)</option>
@@ -112,21 +111,22 @@
                     </select>
                 </div>
                 
-<div class="form-group">
-    <label for="edv">EDV:</label>
-    <input type="number" id="edv" name="edv" placeholder="Digite seu EDV" required 
-           pattern="[0-9]*" inputmode="numeric">
-</div>
+                <div class="form-group">
+                    <label for="edv">EDV:</label>
+                    <input type="number" id="edv" name="edv" placeholder="Digite seu EDV" required 
+                           pattern="[0-9]*" inputmode="numeric">
+                </div>
                 
                 <div class="terms-checkbox">
                     <input type="checkbox" id="acceptTerms" required>
-                    <label for="acceptTerms">Eu li e aceito os <a href="#" id="termsLink">Termos de Uso</a></label>
+                    <label for="acceptTerms">Eu li e aceito os <a href="javascript:void(0)" id="termsLink">Termos de Uso</a></label>
                 </div>
-<div style="text-align: center; margin-top: 10px;">
-    <a href="https://forms.gle/9Rg6abPqrVmX5dgNA" target="_blank" style="color:#000000; text-decoration: underline; font-weight: bold;">
-        Seu EDV não está Cadastrado? Cadastre!
-    </a>
-</div>
+                
+                <div style="text-align: center; margin-top: 10px;">
+                    <a href="https://forms.gle/9Rg6abPqrVmX5dgNA" target="_blank" style="color:#000000; text-decoration: underline; font-weight: bold;">
+                        Seu EDV não está Cadastrado? Cadastre!
+                    </a>
+                </div>
                 
                 <button type="submit" class="btn" id="loginButton">Entrar</button>
             </form>
@@ -175,37 +175,54 @@
         &copy; 2025 INRB. Todos os direitos reservados.
     </footer>
     
-    <script src="script.js">
-        <script>
-    // Modal de Termos de Uso
-    const termsModal = document.getElementById('termsModal');
-    const termsLink = document.getElementById('termsLink');
-    const closeModal = document.querySelector('.close');
-    const acceptTermsBtn = document.getElementById('acceptTermsBtn');
+    <script>
+        // Controle do Modal de Termos - Versão Corrigida
+        document.addEventListener('DOMContentLoaded', function() {
+            // Elementos do DOM
+            const termsModal = document.getElementById('termsModal');
+            const termsLink = document.getElementById('termsLink');
+            const closeBtn = document.querySelector('.close');
+            const acceptTermsBtn = document.getElementById('acceptTermsBtn');
+            const acceptTermsCheckbox = document.getElementById('acceptTerms');
 
-    // Abrir modal quando clicar no link dos termos
-    termsLink.addEventListener('click', function(e) {
-        e.preventDefault();
-        termsModal.style.display = 'block';
-    });
+            // Abrir modal ao clicar no link dos termos
+            if (termsLink && termsModal) {
+                termsLink.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    termsModal.style.display = 'block';
+                    document.body.style.overflow = 'hidden'; // Trava scroll da página
+                });
+            }
 
-    // Fechar modal quando clicar no X
-    closeModal.addEventListener('click', function() {
-        termsModal.style.display = 'none';
-    });
+            // Fechar modal ao clicar no X
+            if (closeBtn && termsModal) {
+                closeBtn.addEventListener('click', function() {
+                    termsModal.style.display = 'none';
+                    document.body.style.overflow = 'auto'; // Libera scroll da página
+                });
+            }
 
-    // Fechar modal quando clicar fora do conteúdo
-    window.addEventListener('click', function(event) {
-        if (event.target === termsModal) {
-            termsModal.style.display = 'none';
-        }
-    });
+            // Fechar modal ao clicar fora
+            if (termsModal) {
+                window.addEventListener('click', function(event) {
+                    if (event.target === termsModal) {
+                        termsModal.style.display = 'none';
+                        document.body.style.overflow = 'auto';
+                    }
+                });
+            }
 
-    // Aceitar termos e fechar modal
-    acceptTermsBtn.addEventListener('click', function() {
-        document.getElementById('acceptTerms').checked = true;
-        termsModal.style.display = 'none';
-    });
-</script>
+            // Aceitar termos e fechar modal
+            if (acceptTermsBtn && acceptTermsCheckbox && termsModal) {
+                acceptTermsBtn.addEventListener('click', function() {
+                    acceptTermsCheckbox.checked = true;
+                    termsModal.style.display = 'none';
+                    document.body.style.overflow = 'auto';
+                });
+            }
+        });
+    </script>
+    
+    <script src="script.js"></script>
 </body>
 </html>
