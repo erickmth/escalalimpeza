@@ -17,7 +17,7 @@ O objetivo principal deste sistema é possibilitar que os alunos da turma acesse
 
 - **HTML5** e **CSS3**: Para a estrutura e o estilo do site.
 - **JavaScript**: Para a lógica de interação e controle de acessos.
-- **Flask** (Backend): API para fornecimento de dados dinâmicos da escala de limpeza.
+- **Flask** (Backend): API para fornecimento de dados dinâmicos da escala de limpeza. (APIs expostas apenas para fins educacionais)
 
 ## Benefícios do Projeto
 
