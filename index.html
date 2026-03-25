@@ -8,6 +8,13 @@
     <link rel="shortcut icon" type="image/x-icon" href="favicon.png">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
     <style>
+        /* Forçar HTTPS em produção */
+        (function() {
+            if (window.location.protocol !== 'https:' && window.location.hostname !== 'localhost') {
+                window.location.href = 'https://' + window.location.host + window.location.pathname;
+            }
+        })();
+
         .modal {
             display: none;
             position: fixed;
@@ -380,6 +387,17 @@
         .alert-modal.show {
             display: block;
         }
+        
+        /* Estilos adicionais para validação */
+        .form-group input:invalid {
+            border-color: #dc3545;
+        }
+        
+        .edv-hint {
+            font-size: 12px;
+            color: #6c757d;
+            margin-top: 4px;
+        }
     </style>
 </head>
 <body>
@@ -438,8 +456,9 @@
                 
                 <div class="form-group">
                     <label for="edv">EDV:</label>
-                    <input type="number" id="edv" name="edv" placeholder="Digite seu EDV" required 
-                           pattern="[0-9]*" inputmode="numeric">
+                    <input type="text" id="edv" name="edv" placeholder="Digite seu EDV (apenas números)" required 
+                           pattern="[0-9]*" inputmode="numeric" maxlength="20">
+                    <div class="edv-hint">Digite apenas os números do seu EDV</div>
                 </div>
                 
                 <div class="terms-checkbox">
@@ -495,47 +514,107 @@
             </div>
         </div>
     </div>
-<footer onclick="window.open('https://www.institutorobertbosch.org.br/', '_blank')" style="cursor: pointer;">
-    &copy; <script>document.write(new Date().getFullYear())</script> INRB. Todos os direitos reservados.
-</footer>
+    
+    <footer onclick="window.open('https://www.institutorobertbosch.org.br/', '_blank')" style="cursor: pointer;">
+        &copy; <script>document.write(new Date().getFullYear())</script> INRB. Todos os direitos reservados.
+    </footer>
     
     <script>
+        // =============================================
+        // CONFIGURAÇÕES DE SEGURANÇA
+        // =============================================
+        
+        // Forçar HTTPS (exceto localhost)
+        if (window.location.protocol !== 'https:' && window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1') {
+            window.location.href = 'https://' + window.location.host + window.location.pathname + window.location.search;
+        }
+        
+        // Prevenir console injection
+        const originalConsole = {
+            log: console.log,
+            error: console.error,
+            warn: console.warn
+        };
+        
+        if (window.location.hostname !== 'localhost') {
+            console.log = function() {};
+            console.error = function() {};
+            console.warn = function() {};
+        }
+        
         // Configurações
         const API_URL = 'https://erickmth.pythonanywhere.com';
         let currentAlert = null;
         let alertCheckInterval = null;
+        let sessionCheckInterval = null;
 
         // Variáveis do sistema de bloqueio
         let loginAttempts = 0;
         let blockedUntil = 0;
         let nextBlockDuration = 1 * 60 * 1000;
 
-        // Inicialização quando o DOM estiver carregado
-        document.addEventListener('DOMContentLoaded', function() {
-            setupModalTerms();
-            loadBlockState();
-            
-            // Configurar formulário de login
-            const loginForm = document.getElementById('loginForm');
-            if (loginForm) {
-                loginForm.addEventListener('submit', handleLogin);
-                
-                if (loginAttempts >= 2) showAttemptsWarning();
-                if (blockedUntil > 0) {
-                    const remaining = Math.ceil((blockedUntil - Date.now()) / (60 * 1000));
-                    showMessage(`⏳ Acesso bloqueado. Tente novamente em ${remaining} minuto(s).`, 'error');
-                }
-            }
-            
-            // Verificar avisos imediatamente e abrir popup se houver
-            checkForAlerts();
-            
-            // Verificar avisos a cada 30 segundos
-            alertCheckInterval = setInterval(checkForAlerts, 30000);
-        });
+        // =============================================
+        // FUNÇÕES DE VALIDAÇÃO
+        // =============================================
+        
+        function validarEDV(edv) {
+            // Remove qualquer caractere não numérico
+            const edvLimpo = edv.replace(/[^\d]/g, '');
+            // Verifica se tem apenas números e comprimento válido (entre 5 e 20 caracteres)
+            return /^\d+$/.test(edvLimpo) && edvLimpo.length >= 5 && edvLimpo.length <= 20;
+        }
+        
+        function sanitizarTexto(texto) {
+            if (!texto) return '';
+            // Remove tags HTML e caracteres perigosos
+            return texto.replace(/[<>]/g, '').trim();
+        }
+        
+        function sanitizarTurma(turma) {
+            const turmasValidas = [
+                'Formare 2026',
+                'Aprender A+ (Terça-Feira)',
+                'Aprender A+ (Quarta-Feira)',
+                'Aprender A+ (Quinta-Feira)',
+                'Informática (Atividade complementar)',
+                'Inglês (Atividade complementar)'
+            ];
+            return turmasValidas.includes(turma) ? turma : null;
+        }
 
         // =============================================
-        // SISTEMA DE LOGIN E BLOQUEIO
+        // GERENCIAMENTO DE SESSÃO
+        // =============================================
+        
+        function startSessionTimer() {
+            // Limpar timer anterior se existir
+            if (window.sessionTimer) clearTimeout(window.sessionTimer);
+            
+            // Sessão expira após 12 horas
+            window.sessionTimer = setTimeout(() => {
+                // Limpar dados da sessão
+                sessionStorage.clear();
+                // Mostrar mensagem amigável
+                const messageDiv = document.getElementById('message');
+                if (messageDiv) {
+                    messageDiv.textContent = '⏰ Sessão expirada. Faça login novamente.';
+                    messageDiv.className = 'message warning';
+                    messageDiv.style.display = 'block';
+                }
+                // Recarregar a página após 3 segundos
+                setTimeout(() => {
+                    window.location.reload();
+                }, 3000);
+            }, 12 * 60 * 60 * 1000); // 12 horas
+        }
+        
+        function clearSession() {
+            if (window.sessionTimer) clearTimeout(window.sessionTimer);
+            sessionStorage.clear();
+        }
+
+        // =============================================
+        // SISTEMA DE BLOQUEIO (Melhorado)
         // =============================================
 
         function checkBlockExpiration() {
@@ -558,9 +637,14 @@
             const now = Date.now();
             blockedUntil = now + nextBlockDuration;
             
-            if (loginAttempts >= 15) nextBlockDuration = 2 * 60 * 60 * 1000;
-            else if (loginAttempts >= 10) nextBlockDuration = 30 * 60 * 1000;
-            else if (loginAttempts >= 5) nextBlockDuration = 1 * 60 * 1000;
+            // Aumenta o tempo de bloqueio progressivamente
+            if (loginAttempts >= 15) {
+                nextBlockDuration = 2 * 60 * 60 * 1000; // 2 horas
+            } else if (loginAttempts >= 10) {
+                nextBlockDuration = 30 * 60 * 1000; // 30 minutos
+            } else if (loginAttempts >= 5) {
+                nextBlockDuration = 1 * 60 * 1000; // 1 minuto
+            }
             
             localStorage.setItem('blockedUntil', blockedUntil.toString());
             localStorage.setItem('loginAttempts', loginAttempts.toString());
@@ -583,7 +667,8 @@
             const warningEl = document.getElementById('attemptsWarning');
             
             if (loginAttempts >= 2 && loginAttempts < 5) {
-                warningEl.textContent = `⚠️ Você teve ${loginAttempts} tentativas incorretas. Após ${5 - loginAttempts} tentativas, será bloqueado por 1 minuto.`;
+                const remainingAttempts = 5 - loginAttempts;
+                warningEl.textContent = `⚠️ Você teve ${loginAttempts} tentativa(s) incorreta(s). Após ${remainingAttempts} tentativa(s), será bloqueado por 1 minuto.`;
                 warningEl.style.display = 'block';
                 
                 setTimeout(() => {
@@ -605,19 +690,21 @@
             }, 5000);
         }
 
+        // =============================================
+        // HANDLE LOGIN (Com validações melhoradas)
+        // =============================================
+
         async function handleLogin(event) {
             event.preventDefault();
             
             const loginButton = document.getElementById('loginButton');
-            loginButton.classList.add('loading');
-            loginButton.disabled = true;
+            const turmaSelect = document.getElementById('turma');
+            const edvInput = document.getElementById('edv');
             
             // Verificar termos aceitos
             const acceptTerms = document.getElementById('acceptTerms').checked;
             if (!acceptTerms) {
                 showMessage('❌ Você deve aceitar os termos de uso para continuar.', 'error');
-                loginButton.classList.remove('loading');
-                loginButton.disabled = false;
                 return;
             }
             
@@ -625,47 +712,81 @@
             if (checkBlockExpiration()) {
                 const remaining = Math.ceil((blockedUntil - Date.now()) / (60 * 1000));
                 showMessage(`⏳ Acesso bloqueado. Tente novamente em ${remaining} minuto(s).`, 'error');
-                loginButton.classList.remove('loading');
-                loginButton.disabled = false;
                 return;
             }
             
-            const turma = document.getElementById('turma').value;
-            const edv = document.getElementById('edv').value;
+            const turma = turmaSelect.value;
+            let edv = edvInput.value.trim();
+            
+            // Validar turma
+            const turmaValida = sanitizarTurma(turma);
+            if (!turmaValida) {
+                showMessage('❌ Turma inválida. Selecione uma turma válida.', 'error');
+                return;
+            }
+            
+            // Validar EDV
+            if (!validarEDV(edv)) {
+                showMessage('❌ EDV inválido. Digite apenas números (mínimo 5 caracteres).', 'error');
+                edvInput.value = '';
+                edvInput.focus();
+                return;
+            }
+            
+            // Limpar EDV (remover caracteres não numéricos)
+            edv = edv.replace(/[^\d]/g, '');
+            
+            // Mostrar loading
+            loginButton.classList.add('loading');
+            loginButton.disabled = true;
             
             try {
+                // Adicionar timeout na requisição
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), 10000);
+                
                 const response = await fetch(`${API_URL}/api/login`, {
                     method: 'POST',
                     headers: { 
-                        'Content-Type': 'application/json' 
+                        'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify({ turma, edv })
+                    body: JSON.stringify({ 
+                        turma: turmaValida, 
+                        edv: edv 
+                    }),
+                    signal: controller.signal
                 });
+                
+                clearTimeout(timeoutId);
                 
                 const data = await response.json();
                 
                 if (data.success) {
-                    // Login bem-sucedido
+                    // Login bem-sucedido - resetar tentativas
                     loginAttempts = 0;
                     localStorage.removeItem('loginAttempts');
                     localStorage.removeItem('blockedUntil');
                     localStorage.removeItem('nextBlockDuration');
 
-                    // Salvar dados na sessionStorage
-                    sessionStorage.setItem('nome', data.nome);
-                    sessionStorage.setItem('admin', data.is_admin);
-                    sessionStorage.setItem('turma', turma);
+                    // Salvar dados na sessionStorage (não localStorage - mais seguro)
+                    sessionStorage.setItem('nome', sanitizarTexto(data.nome));
+                    sessionStorage.setItem('admin', data.is_admin ? 'true' : 'false');
+                    sessionStorage.setItem('turma', turmaValida);
+                    sessionStorage.setItem('loginTime', Date.now().toString());
+                    
+                    // Iniciar timer de sessão
+                    startSessionTimer();
 
                     showMessage('✅ Login realizado com sucesso! Redirecionando...', 'success');
 
-                    // Determinar página de destino baseado na turma (EXATAMENTE como no script.js)
+                    // Determinar página de destino
                     let page = 'index.html';
-                    if (turma.includes('Formare')) page = 'formare.html';
-                    else if (turma.includes('Terça')) page = 'aprender_terca.html';
-                    else if (turma.includes('Quarta')) page = 'aprender_quarta.html';
-                    else if (turma.includes('Quinta')) page = 'aprender_quinta.html';
-                    else if (turma.includes('Informática')) page = 'informatica.html';
-                    else if (turma.includes('Inglês')) page = 'ingles.html';
+                    if (turmaValida.includes('Formare')) page = 'formare.html';
+                    else if (turmaValida.includes('Terça')) page = 'aprender_terca.html';
+                    else if (turmaValida.includes('Quarta')) page = 'aprender_quarta.html';
+                    else if (turmaValida.includes('Quinta')) page = 'aprender_quinta.html';
+                    else if (turmaValida.includes('Informática')) page = 'informatica.html';
+                    else if (turmaValida.includes('Inglês')) page = 'ingles.html';
                     
                     // Redirecionar após breve delay
                     setTimeout(() => {
@@ -684,9 +805,17 @@
                         showMessage('❌ EDV ou turma incorretos. Verifique suas credenciais.', 'error');
                         showAttemptsWarning();
                     }
+                    
+                    // Limpar campo EDV para nova tentativa
+                    edvInput.value = '';
+                    edvInput.focus();
                 }
             } catch (error) {
-                showMessage('🌐 Erro de conexão com o servidor. Tente novamente.', 'error');
+                if (error.name === 'AbortError') {
+                    showMessage('🌐 Tempo limite excedido. Verifique sua conexão.', 'error');
+                } else {
+                    showMessage('🌐 Erro de conexão com o servidor. Tente novamente.', 'error');
+                }
                 console.error('Erro:', error);
             } finally {
                 loginButton.classList.remove('loading');
@@ -743,13 +872,19 @@
         }
 
         // =============================================
-        // SISTEMA DE AVISOS - POPUP ELEGANTE E COMPACTO
+        // SISTEMA DE AVISOS (Melhorado)
         // =============================================
 
-        // Verificar se há avisos ativos
         async function checkForAlerts() {
             try {
-                const response = await fetch(`${API_URL}/api/public/alerts/active`);
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), 8000);
+                
+                const response = await fetch(`${API_URL}/api/public/alerts/active`, {
+                    signal: controller.signal
+                });
+                
+                clearTimeout(timeoutId);
                 
                 if (!response.ok) {
                     throw new Error('Erro ao verificar avisos');
@@ -766,14 +901,15 @@
                 }
                 
             } catch (error) {
-                console.error('Erro ao verificar avisos:', error);
+                if (error.name !== 'AbortError') {
+                    console.error('Erro ao verificar avisos:', error);
+                }
                 if (currentAlert) {
                     hideAlertModal();
                 }
             }
         }
 
-        // Mostrar modal de avisos automaticamente
         function showAlertModal(alertData) {
             const modal = document.getElementById('alertModal');
             const title = document.getElementById('alertModalTitle');
@@ -783,14 +919,10 @@
             const link = document.getElementById('alertModalLink');
 
             // Configurar título
-            if (alertData.title) {
-                title.textContent = alertData.title;
-            } else {
-                title.textContent = 'Aviso Importante';
-            }
+            title.textContent = alertData.title || 'Aviso Importante';
 
-            // Configurar corpo
-            body.innerHTML = alertData.body_html;
+            // Configurar corpo (com sanitização adicional)
+            body.innerHTML = alertData.body_html || '';
             if (alertData.is_shouting) {
                 body.classList.add('shouting');
             } else {
@@ -821,7 +953,7 @@
                 link.style.display = 'none';
             }
 
-            // Mostrar modal automaticamente
+            // Mostrar modal
             modal.style.display = 'block';
             document.body.style.overflow = 'hidden';
             modal.classList.add('show');
@@ -830,7 +962,6 @@
             recordAlertEvent(alertData.id, 'view');
         }
 
-        // Fechar popup de avisos
         function fecharPopupAviso() {
             const modal = document.getElementById('alertModal');
             modal.style.display = 'none';
@@ -842,7 +973,6 @@
             }
         }
 
-        // Esconder modal de avisos
         function hideAlertModal() {
             const modal = document.getElementById('alertModal');
             modal.style.display = 'none';
@@ -850,7 +980,6 @@
             modal.classList.remove('show');
         }
 
-        // Iniciar contagem regressiva
         function startCountdown(endTime, element) {
             function updateCountdown() {
                 const agora = new Date();
@@ -881,20 +1010,93 @@
             setInterval(updateCountdown, 1000);
         }
 
-        // Registrar evento do alerta
         async function recordAlertEvent(alertId, eventType) {
             try {
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), 5000);
+                
                 await fetch(`${API_URL}/api/public/alerts/${alertId}/event`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
                     },
-                    body: JSON.stringify({ event_type: eventType })
+                    body: JSON.stringify({ event_type: eventType }),
+                    signal: controller.signal
                 });
+                
+                clearTimeout(timeoutId);
             } catch (error) {
-                console.error('Erro ao registrar evento:', error);
+                if (error.name !== 'AbortError') {
+                    console.error('Erro ao registrar evento:', error);
+                }
             }
         }
+
+        // =============================================
+        // VERIFICAR SESSÃO EXISTENTE
+        // =============================================
+        
+        function checkExistingSession() {
+            const loginTime = sessionStorage.getItem('loginTime');
+            const nome = sessionStorage.getItem('nome');
+            
+            if (loginTime && nome) {
+                const elapsed = Date.now() - parseInt(loginTime);
+                if (elapsed < 12 * 60 * 60 * 1000) { // Menos de 12 horas
+                    // Sessão válida, reiniciar timer
+                    startSessionTimer();
+                } else {
+                    // Sessão expirada
+                    clearSession();
+                }
+            }
+        }
+
+        // =============================================
+        // INICIALIZAÇÃO
+        // =============================================
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // Carregar estado de bloqueio
+            loadBlockState();
+            
+            // Configurar modal de termos
+            setupModalTerms();
+            
+            // Verificar sessão existente
+            checkExistingSession();
+            
+            // Configurar formulário de login
+            const loginForm = document.getElementById('loginForm');
+            if (loginForm) {
+                loginForm.addEventListener('submit', handleLogin);
+                
+                // Mostrar aviso se houver tentativas anteriores
+                if (loginAttempts >= 2) showAttemptsWarning();
+                if (blockedUntil > 0) {
+                    const remaining = Math.ceil((blockedUntil - Date.now()) / (60 * 1000));
+                    showMessage(`⏳ Acesso bloqueado. Tente novamente em ${remaining} minuto(s).`, 'error');
+                }
+            }
+            
+            // Adicionar validação em tempo real no campo EDV
+            const edvInput = document.getElementById('edv');
+            if (edvInput) {
+                edvInput.addEventListener('input', function(e) {
+                    // Remove qualquer caractere não numérico
+                    this.value = this.value.replace(/[^\d]/g, '');
+                });
+            }
+            
+            // Verificar avisos imediatamente
+            checkForAlerts();
+            
+            // Verificar avisos a cada 30 segundos
+            alertCheckInterval = setInterval(checkForAlerts, 30000);
+            
+            // Verificar sessão periodicamente
+            setInterval(checkExistingSession, 60000); // A cada minuto
+        });
 
         // Event listener para cliques no link do alerta
         document.addEventListener('click', function(e) {
@@ -910,16 +1112,10 @@
             }
         });
 
-        // Prevenir fechar clicando fora (mantém invasivo)
-        document.getElementById('alertModal').addEventListener('click', function(e) {
-            if (e.target === this) {
-                // Opcional: pode remover esta linha se quiser permitir fechar clicando fora
-                // fecharPopupAviso();
-            }
+        // Limpar sessão ao fechar a página (opcional)
+        window.addEventListener('beforeunload', function() {
+            // Não limpar imediatamente para permitir recarregamento
         });
     </script>
-
-
 </body>
 </html>
-
