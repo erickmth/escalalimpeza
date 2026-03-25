@@ -113,8 +113,8 @@
                 <button class="menu-btn" onclick="toggleMenu(event)">☰</button>
                 <div id="menuOptions" class="menu-options">
                     <a href="index.html">Início</a>
-                    <a href="#" onclick="redirectToWhatsApp1()">Contato via WhatsApp (Erick)</a>
-                    <a href="#" onclick="redirectToWhatsApp()">Contato via WhatsApp (Laura)</a>
+                    <a href="#" onclick="redirectToWhatsApp1()">Precisa de Ajuda? WhatsApp (Erick)</a>
+
                     <a href="index.html">Sair</a>
                 </div>
             </div>
@@ -170,12 +170,6 @@
             window.open(url, '_blank');
         }
         
-        function redirectToWhatsApp() {
-            const phoneNumber = "+5541999644705";
-            const message = "Olá, Laura! Eu estou com dúvidas sobre o site de Escala de limpeza";
-            const url = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
-            window.open(url, '_blank');
-        }
     </script>
     <script src="script.js"></script>
 </body>
