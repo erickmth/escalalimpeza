@@ -9,30 +9,11 @@
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
     <style>
         /* ============================================= */
-        /* CONFIGURAÇÕES GLOBAIS */
-        /* ============================================= */
-        
-        :root {
-            --primary-color: #ec3333;
-            --secondary-color: #d63031;
-            --success-color: #27ae60;
-            --warning-color: #f39c12;
-            --border-radius: 8px;
-        }
-        
-        /* Forçar HTTPS em produção */
-        (function() {
-            if (window.location.protocol !== 'https:' && window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1') {
-                window.location.href = 'https://' + window.location.host + window.location.pathname + window.location.search;
-            }
-        })();
-
-        /* ============================================= */
-        /* MODAL DE TERMOS - GARANTIR QUE COMEÇA FECHADO */
+        /* ESTILOS ORIGINAIS MANTIDOS */
         /* ============================================= */
         
         .modal {
-            display: none !important;  /* Força começar fechado */
+            display: none;
             position: fixed;
             z-index: 9999;
             left: 0;
@@ -41,10 +22,6 @@
             height: 100%;
             overflow: auto;
             background-color: rgba(0,0,0,0.7);
-        }
-        
-        .modal.show {
-            display: block !important;  /* Só abre quando tem a classe show */
         }
         
         .modal-content {
@@ -95,7 +72,7 @@
         }
 
         .message.success {
-            background-color: #d4edda;
+            background-color: #d1edff;
             color: #155724;
             border-left: 4px solid #c3e6cb;
         }
@@ -250,7 +227,7 @@
             font-weight: 800;
             font-size: 1.3em;
             text-align: center;
-            color: var(--primary-color);
+            color: var(--accent-color);
             letter-spacing: 1px;
         }
 
@@ -408,97 +385,11 @@
             display: block;
         }
         
-        /* Estilos adicionais para validação */
-        .form-group input:invalid {
-            border-color: #dc3545;
-        }
-        
+        /* Estilos adicionais para validação (mantendo original) */
         .edv-hint {
             font-size: 12px;
             color: #6c757d;
             margin-top: 4px;
-        }
-        
-        /* Estilos básicos do container e login */
-        .container {
-            max-width: 500px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-        
-        .header {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-        
-        .logo {
-            max-width: 200px;
-        }
-        
-        .login-box {
-            background: white;
-            padding: 30px;
-            border-radius: 12px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-        }
-        
-        .login-box h1 {
-            text-align: center;
-            margin-bottom: 25px;
-            font-size: 1.5em;
-            color: #333;
-        }
-        
-        .form-group {
-            margin-bottom: 20px;
-        }
-        
-        .form-group label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 500;
-            color: #555;
-        }
-        
-        .form-group select,
-        .form-group input {
-            width: 100%;
-            padding: 10px 12px;
-            border: 1px solid #ddd;
-            border-radius: 6px;
-            font-size: 16px;
-            transition: border-color 0.3s;
-        }
-        
-        .form-group select:focus,
-        .form-group input:focus {
-            outline: none;
-            border-color: var(--primary-color);
-        }
-        
-        .btn {
-            width: 100%;
-            padding: 12px;
-            background-color: var(--primary-color);
-            color: white;
-            border: none;
-            border-radius: 6px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-        
-        .btn:hover {
-            background-color: var(--secondary-color);
-        }
-        
-        footer {
-            text-align: center;
-            margin-top: 30px;
-            padding: 20px;
-            color: #888;
-            font-size: 12px;
         }
     </style>
 </head>
@@ -558,7 +449,7 @@
                 
                 <div class="form-group">
                     <label for="edv">EDV:</label>
-                    <input type="text" id="edv" name="edv" placeholder="Digite seu EDV (apenas números)" required 
+                    <input type="text" id="edv" name="edv" placeholder="Digite seu EDV" required 
                            pattern="[0-9]*" inputmode="numeric" maxlength="20">
                     <div class="edv-hint">Digite apenas os números do seu EDV</div>
                 </div>
@@ -587,7 +478,7 @@
             <span class="close">&times;</span>
             <h2>Termos de Uso</h2>
             <p><strong>Última atualização: 20 de abril de 2025</strong></p>
-            <p>Ao acessar e utilizar o site <strong>Escala de Limpeza do Formare</strong>, você concorda com os segurentos Termos de Uso. Se não concordar com algum deles, recomendamos não utilizar o site.</p>
+            <p>Ao acessar e utilizar o site <strong>Escala de Limpeza do Formare</strong>, você concorda com os seguintes Termos de Uso. Se não concordar com algum deles, recomendamos não utilizar o site.</p>
             <h3>1. Objetivo do site</h3>
             <p>Este site foi criado para organizar e facilitar a consulta da escala de limpeza da sala do Formare. A ideia é manter nosso ambiente limpo, organizado e agradável para todos, incentivando o cuidado coletivo com o espaço que compartilhamos todos os dias.</p>
             <h3>2. Acesso ao sistema</h3>
@@ -631,17 +522,11 @@
             window.location.href = 'https://' + window.location.host + window.location.pathname + window.location.search;
         }
         
-        // Prevenir console injection (apenas em produção)
-        if (window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1') {
-            console.log = function() {};
-            console.error = function() {};
-            console.warn = function() {};
-        }
-        
         // Configurações
         const API_URL = 'https://erickmth.pythonanywhere.com';
         let currentAlert = null;
         let alertCheckInterval = null;
+        let sessionTimer = null;
 
         // Variáveis do sistema de bloqueio
         let loginAttempts = 0;
@@ -679,9 +564,8 @@
         // =============================================
         
         function startSessionTimer() {
-            if (window.sessionTimer) clearTimeout(window.sessionTimer);
-            
-            window.sessionTimer = setTimeout(() => {
+            if (sessionTimer) clearTimeout(sessionTimer);
+            sessionTimer = setTimeout(() => {
                 sessionStorage.clear();
                 const messageDiv = document.getElementById('message');
                 if (messageDiv) {
@@ -689,19 +573,17 @@
                     messageDiv.className = 'message warning';
                     messageDiv.style.display = 'block';
                 }
-                setTimeout(() => {
-                    window.location.reload();
-                }, 3000);
+                setTimeout(() => window.location.reload(), 3000);
             }, 12 * 60 * 60 * 1000);
         }
         
         function clearSession() {
-            if (window.sessionTimer) clearTimeout(window.sessionTimer);
+            if (sessionTimer) clearTimeout(sessionTimer);
             sessionStorage.clear();
         }
 
         // =============================================
-        // SISTEMA DE BLOQUEIO
+        // SISTEMA DE LOGIN E BLOQUEIO
         // =============================================
 
         function checkBlockExpiration() {
@@ -723,13 +605,9 @@
             const now = Date.now();
             blockedUntil = now + nextBlockDuration;
             
-            if (loginAttempts >= 15) {
-                nextBlockDuration = 2 * 60 * 60 * 1000;
-            } else if (loginAttempts >= 10) {
-                nextBlockDuration = 30 * 60 * 1000;
-            } else if (loginAttempts >= 5) {
-                nextBlockDuration = 1 * 60 * 1000;
-            }
+            if (loginAttempts >= 15) nextBlockDuration = 2 * 60 * 60 * 1000;
+            else if (loginAttempts >= 10) nextBlockDuration = 30 * 60 * 1000;
+            else if (loginAttempts >= 5) nextBlockDuration = 1 * 60 * 1000;
             
             localStorage.setItem('blockedUntil', blockedUntil.toString());
             localStorage.setItem('loginAttempts', loginAttempts.toString());
@@ -752,8 +630,7 @@
             const warningEl = document.getElementById('attemptsWarning');
             
             if (loginAttempts >= 2 && loginAttempts < 5) {
-                const remainingAttempts = 5 - loginAttempts;
-                warningEl.textContent = `⚠️ Você teve ${loginAttempts} tentativa(s) incorreta(s). Após ${remainingAttempts} tentativa(s), será bloqueado por 1 minuto.`;
+                warningEl.textContent = `⚠️ Você teve ${loginAttempts} tentativas incorretas. Após ${5 - loginAttempts} tentativas, será bloqueado por 1 minuto.`;
                 warningEl.style.display = 'block';
                 
                 setTimeout(() => {
@@ -775,10 +652,6 @@
             }, 5000);
         }
 
-        // =============================================
-        // HANDLE LOGIN
-        // =============================================
-
         async function handleLogin(event) {
             event.preventDefault();
             
@@ -786,12 +659,14 @@
             const turmaSelect = document.getElementById('turma');
             const edvInput = document.getElementById('edv');
             
+            // Verificar termos aceitos
             const acceptTerms = document.getElementById('acceptTerms').checked;
             if (!acceptTerms) {
                 showMessage('❌ Você deve aceitar os termos de uso para continuar.', 'error');
                 return;
             }
             
+            // Verificar bloqueio
             if (checkBlockExpiration()) {
                 const remaining = Math.ceil((blockedUntil - Date.now()) / (60 * 1000));
                 showMessage(`⏳ Acesso bloqueado. Tente novamente em ${remaining} minuto(s).`, 'error');
@@ -801,12 +676,14 @@
             const turma = turmaSelect.value;
             let edv = edvInput.value.trim();
             
+            // Validar turma
             const turmaValida = sanitizarTurma(turma);
             if (!turmaValida) {
                 showMessage('❌ Turma inválida. Selecione uma turma válida.', 'error');
                 return;
             }
             
+            // Validar EDV
             if (!validarEDV(edv)) {
                 showMessage('❌ EDV inválido. Digite apenas números (mínimo 5 caracteres).', 'error');
                 edvInput.value = '';
@@ -814,6 +691,7 @@
                 return;
             }
             
+            // Limpar EDV
             edv = edv.replace(/[^\d]/g, '');
             
             loginButton.classList.add('loading');
@@ -834,19 +712,22 @@
                 const data = await response.json();
                 
                 if (data.success) {
+                    // Login bem-sucedido
                     loginAttempts = 0;
                     localStorage.removeItem('loginAttempts');
                     localStorage.removeItem('blockedUntil');
                     localStorage.removeItem('nextBlockDuration');
 
+                    // Salvar dados na sessionStorage
                     sessionStorage.setItem('nome', sanitizarTexto(data.nome));
-                    sessionStorage.setItem('admin', data.is_admin ? 'true' : 'false');
+                    sessionStorage.setItem('admin', data.is_admin);
                     sessionStorage.setItem('turma', turmaValida);
                     sessionStorage.setItem('loginTime', Date.now().toString());
                     
                     startSessionTimer();
                     showMessage('✅ Login realizado com sucesso! Redirecionando...', 'success');
 
+                    // Determinar página de destino
                     let page = 'index.html';
                     if (turmaValida.includes('Formare')) page = 'formare.html';
                     else if (turmaValida.includes('Terça')) page = 'aprender_terca.html';
@@ -855,9 +736,12 @@
                     else if (turmaValida.includes('Informática')) page = 'informatica.html';
                     else if (turmaValida.includes('Inglês')) page = 'ingles.html';
                     
-                    setTimeout(() => { window.location.href = page; }, 1500);
+                    setTimeout(() => {
+                        window.location.href = page;
+                    }, 1500);
                     
                 } else {
+                    // Login falhou
                     loginAttempts++;
                     localStorage.setItem('loginAttempts', loginAttempts.toString());
                     
@@ -885,7 +769,7 @@
         }
 
         // =============================================
-        // MODAL DE TERMOS - CORRIGIDO
+        // MODAL DE TERMOS - CORRIGIDO (abre apenas quando clica)
         // =============================================
 
         function setupModalTerms() {
@@ -897,15 +781,13 @@
 
             // GARANTIR QUE O MODAL COMEÇA FECHADO
             if (termsModal) {
-                termsModal.classList.remove('show');
                 termsModal.style.display = 'none';
             }
 
-            // Abrir modal APENAS quando clicar no link
+            // Abrir modal APENAS ao clicar no link dos termos
             if (termsLink && termsModal) {
                 termsLink.addEventListener('click', function(e) {
                     e.preventDefault();
-                    termsModal.classList.add('show');
                     termsModal.style.display = 'block';
                     document.body.style.overflow = 'hidden';
                 });
@@ -914,7 +796,6 @@
             // Fechar modal ao clicar no X
             if (closeBtn && termsModal) {
                 closeBtn.addEventListener('click', function() {
-                    termsModal.classList.remove('show');
                     termsModal.style.display = 'none';
                     document.body.style.overflow = 'auto';
                 });
@@ -924,7 +805,6 @@
             if (termsModal) {
                 window.addEventListener('click', function(event) {
                     if (event.target === termsModal) {
-                        termsModal.classList.remove('show');
                         termsModal.style.display = 'none';
                         document.body.style.overflow = 'auto';
                     }
@@ -935,15 +815,22 @@
             if (acceptTermsBtn && acceptTermsCheckbox && termsModal) {
                 acceptTermsBtn.addEventListener('click', function() {
                     acceptTermsCheckbox.checked = true;
-                    termsModal.classList.remove('show');
                     termsModal.style.display = 'none';
                     document.body.style.overflow = 'auto';
                 });
             }
+            
+            // Fechar com tecla ESC
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape' && termsModal.style.display === 'block') {
+                    termsModal.style.display = 'none';
+                    document.body.style.overflow = 'auto';
+                }
+            });
         }
 
         // =============================================
-        // SISTEMA DE AVISOS
+        // SISTEMA DE AVISOS - POPUP ELEGANTE E COMPACTO
         // =============================================
 
         async function checkForAlerts() {
@@ -951,10 +838,16 @@
                 const controller = new AbortController();
                 const timeoutId = setTimeout(() => controller.abort(), 8000);
                 
-                const response = await fetch(`${API_URL}/api/public/alerts/active`, { signal: controller.signal });
+                const response = await fetch(`${API_URL}/api/public/alerts/active`, {
+                    signal: controller.signal
+                });
+                
                 clearTimeout(timeoutId);
                 
-                if (!response.ok) throw new Error('Erro ao verificar avisos');
+                if (!response.ok) {
+                    throw new Error('Erro ao verificar avisos');
+                }
+
                 const alertData = await response.json();
                 
                 if (alertData.active && alertData.id !== currentAlert?.id) {
@@ -964,8 +857,14 @@
                     currentAlert = null;
                     hideAlertModal();
                 }
+                
             } catch (error) {
-                if (error.name !== 'AbortError' && currentAlert) hideAlertModal();
+                if (error.name !== 'AbortError') {
+                    console.error('Erro ao verificar avisos:', error);
+                }
+                if (currentAlert) {
+                    hideAlertModal();
+                }
             }
         }
 
@@ -977,30 +876,44 @@
             const countdown = document.getElementById('alertModalCountdown');
             const link = document.getElementById('alertModalLink');
 
-            title.textContent = alertData.title || 'Aviso Importante';
-            body.innerHTML = alertData.body_html || '';
-            
-            if (alertData.is_shouting) body.classList.add('shouting');
-            else body.classList.remove('shouting');
+            if (alertData.title) {
+                title.textContent = alertData.title;
+            } else {
+                title.textContent = 'Aviso Importante';
+            }
+
+            body.innerHTML = alertData.body_html;
+            if (alertData.is_shouting) {
+                body.classList.add('shouting');
+            } else {
+                body.classList.remove('shouting');
+            }
 
             if (alertData.image_path) {
                 image.src = `${API_URL}${alertData.image_path}`;
                 image.style.display = 'block';
-            } else image.style.display = 'none';
+            } else {
+                image.style.display = 'none';
+            }
 
             if (alertData.has_countdown && alertData.countdown_ends_at) {
                 startCountdown(alertData.countdown_ends_at, countdown);
                 countdown.style.display = 'block';
-            } else countdown.style.display = 'none';
+            } else {
+                countdown.style.display = 'none';
+            }
 
             if (alertData.redirect_link) {
                 link.href = alertData.redirect_link;
                 link.style.display = 'inline-block';
-            } else link.style.display = 'none';
+            } else {
+                link.style.display = 'none';
+            }
 
             modal.style.display = 'block';
             document.body.style.overflow = 'hidden';
             modal.classList.add('show');
+
             recordAlertEvent(alertData.id, 'view');
         }
 
@@ -1009,7 +922,10 @@
             modal.style.display = 'none';
             document.body.style.overflow = 'auto';
             modal.classList.remove('show');
-            if (currentAlert) recordAlertEvent(currentAlert.id, 'close');
+            
+            if (currentAlert) {
+                recordAlertEvent(currentAlert.id, 'close');
+            }
         }
 
         function hideAlertModal() {
@@ -1021,23 +937,30 @@
 
         function startCountdown(endTime, element) {
             function updateCountdown() {
-                const diferenca = new Date(endTime) - new Date();
+                const agora = new Date();
+                const fim = new Date(endTime);
+                const diferenca = fim - agora;
+
                 if (diferenca <= 0) {
                     element.textContent = '⏰ TEMPO ESGOTADO!';
                     element.style.background = 'linear-gradient(135deg, #6c757d, #495057)';
                     return;
                 }
+
                 const dias = Math.floor(diferenca / (1000 * 60 * 60 * 24));
                 const horas = Math.floor((diferenca % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
                 const minutos = Math.floor((diferenca % (1000 * 60 * 60)) / (1000 * 60));
                 const segundos = Math.floor((diferenca % (1000 * 60)) / 1000);
+
                 let texto = '⏳ ';
                 if (dias > 0) texto += `${dias} dia${dias > 1 ? 's' : ''} `;
                 if (horas > 0 || dias > 0) texto += `${horas}h `;
                 if (minutos > 0 || horas > 0 || dias > 0) texto += `${minutos}m `;
                 texto += `${segundos}s`;
+
                 element.textContent = texto;
             }
+
             updateCountdown();
             setInterval(updateCountdown, 1000);
         }
@@ -1046,14 +969,20 @@
             try {
                 const controller = new AbortController();
                 const timeoutId = setTimeout(() => controller.abort(), 5000);
+                
                 await fetch(`${API_URL}/api/public/alerts/${alertId}/event`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ event_type: eventType }),
                     signal: controller.signal
                 });
+                
                 clearTimeout(timeoutId);
-            } catch (error) {}
+            } catch (error) {
+                if (error.name !== 'AbortError') {
+                    console.error('Erro ao registrar evento:', error);
+                }
+            }
         }
 
         function checkExistingSession() {
@@ -1062,8 +991,11 @@
             
             if (loginTime && nome) {
                 const elapsed = Date.now() - parseInt(loginTime);
-                if (elapsed < 12 * 60 * 60 * 1000) startSessionTimer();
-                else clearSession();
+                if (elapsed < 12 * 60 * 60 * 1000) {
+                    startSessionTimer();
+                } else {
+                    clearSession();
+                }
             }
         }
 
@@ -1072,13 +1004,14 @@
         // =============================================
 
         document.addEventListener('DOMContentLoaded', function() {
-            loadBlockState();
             setupModalTerms();
+            loadBlockState();
             checkExistingSession();
             
             const loginForm = document.getElementById('loginForm');
             if (loginForm) {
                 loginForm.addEventListener('submit', handleLogin);
+                
                 if (loginAttempts >= 2) showAttemptsWarning();
                 if (blockedUntil > 0) {
                     const remaining = Math.ceil((blockedUntil - Date.now()) / (60 * 1000));
@@ -1086,6 +1019,7 @@
                 }
             }
             
+            // Validação em tempo real no campo EDV
             const edvInput = document.getElementById('edv');
             if (edvInput) {
                 edvInput.addEventListener('input', function(e) {
@@ -1105,7 +1039,9 @@
         });
 
         document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape') fecharPopupAviso();
+            if (e.key === 'Escape') {
+                fecharPopupAviso();
+            }
         });
     </script>
 </body>
