@@ -165,9 +165,12 @@ async function loadScheduleData(turma) {
                 duplaCell.textContent = item.dupla;
                 
                 row.append(semanaCell, duplaCell);
-                if (item.semana === data.semana_atual) {
+                
+                // CORREÇÃO: Usa startsWith para comparar apenas o início da string
+                if (item.semana.startsWith(data.semana_atual)) {
                     row.style.cssText = 'background-color: #e3f2fd; font-weight: bold;';
                 }
+                
                 tbody.appendChild(row);
             });
         }
