@@ -4,6 +4,7 @@ let loginAttempts = 0;
 let blockedUntil = 0;
 let nextBlockDuration = 1 * 60 * 1000;
 
+// ==================== FUNÇÕES DE BLOQUEIO ====================
 function checkBlockExpiration() {
     const now = Date.now();
     
@@ -45,6 +46,19 @@ function loadBlockState() {
     checkBlockExpiration();
 }
 
+// ==================== FUNÇÕES DE UI ====================
+function showMessage(text, type) {
+    const messageEl = document.getElementById('message');
+    if (!messageEl) return;
+    messageEl.textContent = text;
+    messageEl.className = `message ${type}`;
+    messageEl.style.display = 'block';
+    
+    setTimeout(() => {
+        messageEl.style.display = 'none';
+    }, 5000);
+}
+
 function showAttemptsWarning() {
     const warningEl = document.getElementById('attemptsWarning');
     
@@ -60,18 +74,7 @@ function showAttemptsWarning() {
     }
 }
 
-function showMessage(text, type) {
-    const messageEl = document.getElementById('message');
-    if (!messageEl) return;
-    messageEl.textContent = text;
-    messageEl.className = `message ${type}`;
-    messageEl.style.display = 'block';
-    
-    setTimeout(() => {
-        messageEl.style.display = 'none';
-    }, 5000);
-}
-
+// ==================== LOGIN ====================
 async function login(event) {
     event.preventDefault();
     
@@ -110,15 +113,18 @@ async function login(event) {
             sessionStorage.setItem('turma', turma);
             sessionStorage.setItem('loginTime', Date.now().toString());
 
-            let page = 'escala';
-            if (turma.includes('Formare')) page = 'formare';
-            else if (turma.includes('Terça')) page = 'aprender_terca';
-            else if (turma.includes('Quarta')) page = 'aprender_quarta';
-            else if (turma.includes('Quinta')) page = 'aprender_quinta';
-            else if (turma.includes('Informática')) page = 'informatica';
-            else if (turma.includes('Inglês')) page = 'ingles';
+            // Redirecionar para a página correta
+            let page = '';
+            if (turma.includes('Formare')) page = 'formare.html';
+            else if (turma.includes('Terça')) page = 'aprender_terca.html';
+            else if (turma.includes('Quarta')) page = 'aprender_quarta.html';
+            else if (turma.includes('Quinta')) page = 'aprender_quinta.html';
+            else if (turma.includes('Informática')) page = 'informatica.html';
+            else if (turma.includes('Inglês')) page = 'ingles.html';
+            else if (turma.includes('Robótica') || turma.includes('Informática II')) page = 'robotica.html';
+            else page = 'escala.html';
             
-            window.location.href = `${page}.html`;
+            window.location.href = page;
         } else {
             loginAttempts++;
             localStorage.setItem('loginAttempts', loginAttempts.toString());
@@ -131,7 +137,6 @@ async function login(event) {
                 showAttemptsWarning();
             }
             
-            // Limpar campo EDV
             document.getElementById('edv').value = '';
             document.getElementById('edv').focus();
         }
@@ -144,14 +149,32 @@ async function login(event) {
     }
 }
 
+// ==================== CARREGAR ESCALA ====================
 async function loadScheduleData(turma) {
+    // ⚠️ Robótica NÃO tem escala
+    if (turma.includes('Robótica') || turma.includes('Informática II')) {
+        const tbody = document.querySelector('#scheduleTable tbody');
+        if (tbody) {
+            tbody.innerHTML = `
+                <tr>
+                    <td colspan="2" style="text-align: center; color: #e74c3c;">
+                        🤖 A turma de Robótica não possui escala de limpeza.
+                    </td>
+                </tr>
+            `;
+        }
+        const currentWeekEl = document.getElementById('currentWeek');
+        if (currentWeekEl) {
+            currentWeekEl.textContent = 'Não se aplica';
+        }
+        return;
+    }
+    
     try {
-        // ✅ USANDO O ENDPOINT PÚBLICO (NÃO REQUER TOKEN)
         const response = await fetch(`${API_URL}/escala/${encodeURIComponent(turma)}`);
         
         if (!response.ok) {
             if (response.status === 403 || response.status === 401) {
-                // Sessão expirada ou acesso negado
                 sessionStorage.clear();
                 window.location.href = 'index.html';
                 return;
@@ -167,13 +190,11 @@ async function loadScheduleData(turma) {
             return;
         }
         
-        // Atualizar semana atual
         const currentWeekEl = document.getElementById('currentWeek');
         if (currentWeekEl) {
             currentWeekEl.textContent = data.semana_atual || 'Carregando...';
         }
         
-        // Atualizar tabela
         const tbody = document.querySelector('#scheduleTable tbody');
         if (tbody) {
             if (data.duplas && data.duplas.length > 0) {
@@ -189,7 +210,6 @@ async function loadScheduleData(turma) {
                     
                     row.append(semanaCell, duplaCell);
                     
-                    // Destacar semana atual
                     if (item.semana === data.semana_atual || 
                         (data.semana_atual && item.semana.startsWith(data.semana_atual.split(':')[0]))) {
                         row.style.cssText = 'background-color: #e3f2fd; font-weight: bold;';
@@ -212,7 +232,6 @@ async function loadScheduleData(turma) {
         console.error('Erro ao carregar escala:', error);
         showMessage('Erro ao carregar dados da escala', 'error');
         
-        // Mostrar mensagem amigável na tabela
         const tbody = document.querySelector('#scheduleTable tbody');
         if (tbody) {
             tbody.innerHTML = `
@@ -226,112 +245,120 @@ async function loadScheduleData(turma) {
     }
 }
 
+// ==================== VERIFICAÇÃO DE ACESSO ====================
 function checkAccess() {
     const nome = sessionStorage.getItem('nome');
     const turma = sessionStorage.getItem('turma');
     const loginTime = sessionStorage.getItem('loginTime');
-    const path = window.location.pathname;
-
-    // Permite acesso à pratica.html sem login
-    if (path.includes('pratica.html')) {
-        return;
+    const currentPath = window.location.pathname;
+    
+    // Páginas que NÃO exigem login
+    const publicPages = ['index.html', 'pratica.html', 'style.css', 'script.js'];
+    const currentFile = currentPath.split('/').pop();
+    
+    if (publicPages.includes(currentFile)) {
+        return true;
     }
-
+    
     // Verificar se a sessão expirou (12 horas)
     if (loginTime) {
         const elapsed = Date.now() - parseInt(loginTime);
         if (elapsed > 12 * 60 * 60 * 1000) {
             sessionStorage.clear();
             window.location.href = 'index.html';
-            return;
+            return false;
         }
     }
-
-    // Para todas as outras páginas, verifica o login
+    
+    // Verificar se está logado
     if (!nome || !turma) {
         window.location.href = 'index.html';
-        return;
+        return false;
     }
-
-    // Verificar permissão para a página específica
-    if (path.includes('formare.html') && !turma.includes('Formare')) window.location.href = 'index.html';
-    else if (path.includes('aprender_terca.html') && !turma.includes('Terça')) window.location.href = 'index.html';
-    else if (path.includes('aprender_quarta.html') && !turma.includes('Quarta')) window.location.href = 'index.html';
-    else if (path.includes('aprender_quinta.html') && !turma.includes('Quinta')) window.location.href = 'index.html';
-    else if (path.includes('informatica.html') && !turma.includes('Informática')) window.location.href = 'index.html';
-    else if (path.includes('ingles.html') && !turma.includes('Inglês')) window.location.href = 'index.html';
-    else if (path.includes('escala.html') && sessionStorage.getItem('admin') !== 'true') window.location.href = 'index.html';
-}
-
-function checkAndLoadSchedule() {
-    const turma = sessionStorage.getItem('turma');
-    if (turma) {
-        loadScheduleData(turma);
-    } else {
-        // Se não tem turma na sessão, redirecionar para login
+    
+    // Verificar se o usuário tem permissão para a página atual
+    if (currentFile === 'formare.html' && !turma.includes('Formare')) {
         window.location.href = 'index.html';
+        return false;
+    }
+    if (currentFile === 'aprender_terca.html' && !turma.includes('Terça')) {
+        window.location.href = 'index.html';
+        return false;
+    }
+    if (currentFile === 'aprender_quarta.html' && !turma.includes('Quarta')) {
+        window.location.href = 'index.html';
+        return false;
+    }
+    if (currentFile === 'aprender_quinta.html' && !turma.includes('Quinta')) {
+        window.location.href = 'index.html';
+        return false;
+    }
+    if (currentFile === 'informatica.html' && !turma.includes('Informática')) {
+        window.location.href = 'index.html';
+        return false;
+    }
+    if (currentFile === 'ingles.html' && !turma.includes('Inglês')) {
+        window.location.href = 'index.html';
+        return false;
+    }
+    if (currentFile === 'robotica.html' && !turma.includes('Robótica') && !turma.includes('Informática II')) {
+        window.location.href = 'index.html';
+        return false;
+    }
+    
+    return true;
+}
+
+// ==================== INICIALIZAÇÃO ====================
+function init() {
+    const currentPath = window.location.pathname;
+    const isLoginPage = currentPath.includes('index.html') || currentPath === '/' || currentPath.endsWith('/');
+    
+    if (isLoginPage) {
+        // Página de login
+        loadBlockState();
+        
+        const loginForm = document.getElementById('loginForm');
+        if (loginForm) {
+            loginForm.addEventListener('submit', login);
+            
+            if (loginAttempts >= 2) showAttemptsWarning();
+            if (blockedUntil > 0) {
+                const remaining = Math.ceil((blockedUntil - Date.now()) / (60 * 1000));
+                showMessage(`⏳ Acesso bloqueado. Tente novamente em ${remaining} minuto(s).`, 'error');
+            }
+            
+            const edvInput = document.getElementById('edv');
+            if (edvInput) {
+                edvInput.addEventListener('input', function(e) {
+                    this.value = this.value.replace(/[^\d]/g, '');
+                });
+            }
+        }
+    } else {
+        // Páginas protegidas (escala, formare, etc.)
+        if (checkAccess()) {
+            const nome = sessionStorage.getItem('nome');
+            const welcomeEl = document.getElementById('welcome');
+            if (welcomeEl && nome) {
+                welcomeEl.innerHTML = `<h2>Bem-vindo(a), ${decodeURIComponent(nome)} 👋</h2>`;
+            }
+            
+            const turma = sessionStorage.getItem('turma');
+            if (turma) {
+                loadScheduleData(turma);
+            }
+        }
     }
 }
 
-// Função para logout
+// ==================== LOGOUT ====================
 function logout() {
     sessionStorage.clear();
     window.location.href = 'index.html';
 }
 
-// Verificar se é página de admin e adicionar funcionalidades extras
-function initAdminFeatures() {
-    const isAdmin = sessionStorage.getItem('admin') === 'true';
-    const isAdminPage = window.location.pathname.includes('escala.html');
-    
-    if (isAdminPage && !isAdmin) {
-        window.location.href = 'index.html';
-        return;
-    }
-    
-    if (isAdminPage && isAdmin) {
-        // Adicionar botões de admin se necessário
-        const contentDiv = document.querySelector('.content');
-        if (contentDiv && !document.getElementById('adminPanel')) {
-            // Opcional: adicionar painel admin
-        }
-    }
-}
-
-document.addEventListener('DOMContentLoaded', function() {
-    loadBlockState();
-    
-    const loginForm = document.getElementById('loginForm');
-    if (loginForm) {
-        loginForm.addEventListener('submit', login);
-        
-        if (loginAttempts >= 2) showAttemptsWarning();
-        if (blockedUntil > 0) {
-            const remaining = Math.ceil((blockedUntil - Date.now()) / (60 * 1000));
-            showMessage(`⏳ Acesso bloqueado. Tente novamente em ${remaining} minuto(s).`, 'error');
-        }
-        
-        // Validação em tempo real do EDV
-        const edvInput = document.getElementById('edv');
-        if (edvInput) {
-            edvInput.addEventListener('input', function(e) {
-                this.value = this.value.replace(/[^\d]/g, '');
-            });
-        }
-    } else {
-        // Páginas de escala/aluno
-        checkAccess();
-        initAdminFeatures();
-        
-        const nome = sessionStorage.getItem('nome');
-        if (document.getElementById('welcome') && nome) {
-            document.getElementById('welcome').innerHTML = `<h2>Bem-vindo(a), ${decodeURIComponent(nome)} 👋</h2>`;
-        }
-        
-        checkAndLoadSchedule();
-    }
-});
-
-// Exportar funções globais se necessário
+// ==================== EXECUTAR ====================
+document.addEventListener('DOMContentLoaded', init);
 window.logout = logout;
 window.showMessage = showMessage;
