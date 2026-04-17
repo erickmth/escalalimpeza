@@ -442,8 +442,8 @@
                         <option value="Aprender A+ (Terça-Feira)">Aprender A+ (Terça-Feira)</option>
                         <option value="Aprender A+ (Quarta-Feira)">Aprender A+ (Quarta-Feira)</option>
                         <option value="Aprender A+ (Quinta-Feira)">Aprender A+ (Quinta-Feira)</option>
-                        <option value="Informática (Atividade complementar)">Informática (Atividade complementar)</option>
-                        <option value="Inglês (Atividade complementar)">Inglês (Atividade complementar)</option>
+                        <option value="Informática Básica (Curitiba)">Informática Básica (Curitiba)</option>
+                        <option value="Inglês Básico (Curitiba)">Inglês Básico (Curitiba)</option>
                     </select>
                 </div>
                 
@@ -553,8 +553,8 @@
                 'Aprender A+ (Terça-Feira)',
                 'Aprender A+ (Quarta-Feira)',
                 'Aprender A+ (Quinta-Feira)',
-                'Informática (Atividade complementar)',
-                'Inglês (Atividade complementar)'
+                'Informática Básica (Curitiba)',
+                'Inglês Básico (Curitiba)'
             ];
             return turmasValidas.includes(turma) ? turma : null;
         }
@@ -727,14 +727,14 @@
                     startSessionTimer();
                     showMessage('✅ Login realizado com sucesso!', 'success');
 
-                    // Determinar página de destino
+                    // Determinar página de destino (ATUALIZADO)
                     let page = 'index.html';
-                    if (turmaValida.includes('Formare')) page = 'formare.html';
-                    else if (turmaValida.includes('Terça')) page = 'aprender_terca.html';
-                    else if (turmaValida.includes('Quarta')) page = 'aprender_quarta.html';
-                    else if (turmaValida.includes('Quinta')) page = 'aprender_quinta.html';
-                    else if (turmaValida.includes('Informática')) page = 'informatica.html';
-                    else if (turmaValida.includes('Inglês')) page = 'ingles.html';
+                    if (turmaValida === 'Formare 2026') page = 'formare.html';
+                    else if (turmaValida === 'Aprender A+ (Terça-Feira)') page = 'aprender_terca.html';
+                    else if (turmaValida === 'Aprender A+ (Quarta-Feira)') page = 'aprender_quarta.html';
+                    else if (turmaValida === 'Aprender A+ (Quinta-Feira)') page = 'aprender_quinta.html';
+                    else if (turmaValida === 'Informática Básica (Curitiba)') page = 'informatica.html';
+                    else if (turmaValida === 'Inglês Básico (Curitiba)') page = 'ingles.html';
                     
                     setTimeout(() => {
                         window.location.href = page;
