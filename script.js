@@ -113,15 +113,18 @@ async function login(event) {
             sessionStorage.setItem('turma', turma);
             sessionStorage.setItem('loginTime', Date.now().toString());
 
-            // Redirecionar para a página correta
+            // Redirecionar para a página correta (ATUALIZADO)
             let page = '';
-            if (turma.includes('Formare')) page = 'formare.html';
-            else if (turma.includes('Terça')) page = 'aprender_terca.html';
-            else if (turma.includes('Quarta')) page = 'aprender_quarta.html';
-            else if (turma.includes('Quinta')) page = 'aprender_quinta.html';
-            else if (turma.includes('Informática')) page = 'informatica.html';
-            else if (turma.includes('Inglês')) page = 'ingles.html';
-            else if (turma.includes('Robótica') || turma.includes('Informática II')) page = 'robotica.html';
+            if (turma.includes('Formare 2026')) page = 'formare.html';
+            else if (turma.includes('Terça-Feira')) page = 'aprender_terca.html';
+            else if (turma.includes('Quarta-Feira')) page = 'aprender_quarta.html';
+            else if (turma.includes('Quinta-Feira')) page = 'aprender_quinta.html';
+            else if (turma === 'Informática Básica (Curitiba)') page = 'informatica.html';
+            else if (turma === 'Inglês Básico (Curitiba)') page = 'ingles.html';
+            else if (turma === 'Informática II - Robótica (Curitiba)') page = 'robotica.html';
+            else if (turma === 'Inglês Básico (Joinville)') page = 'ingles_joinville.html';
+            else if (turma === 'Inglês Básico (Pomerode)') page = 'ingles_pomerode.html';
+            else if (turma === 'Informática Básica (Joinville)') page = 'informatica_joinville.html';
             else page = 'escala.html';
             
             window.location.href = page;
@@ -151,14 +154,21 @@ async function login(event) {
 
 // ==================== CARREGAR ESCALA ====================
 async function loadScheduleData(turma) {
-    // ⚠️ Robótica NÃO tem escala
-    if (turma.includes('Robótica') || turma.includes('Informática II')) {
+    // Turmas que NÃO têm escala (Robótica)
+    const turmasSemEscala = [
+        'Informática II - Robótica (Curitiba)',
+        'Informática Básica (Joinville)',
+        'Inglês Básico (Joinville)',
+        'Inglês Básico (Pomerode)'
+    ];
+    
+    if (turmasSemEscala.includes(turma)) {
         const tbody = document.querySelector('#scheduleTable tbody');
         if (tbody) {
             tbody.innerHTML = `
                 <tr>
                     <td colspan="2" style="text-align: center; color: #e74c3c;">
-                        🤖 A turma de Robótica não possui escala de limpeza.
+                        🤖 Esta turma não possui escala de limpeza.
                     </td>
                 </tr>
             `;
@@ -276,32 +286,44 @@ function checkAccess() {
         return false;
     }
     
-    // Verificar se o usuário tem permissão para a página atual
-    if (currentFile === 'formare.html' && !turma.includes('Formare')) {
+    // Verificar se o usuário tem permissão para a página atual (ATUALIZADO)
+    if (currentFile === 'formare.html' && !turma.includes('Formare 2026')) {
         window.location.href = 'index.html';
         return false;
     }
-    if (currentFile === 'aprender_terca.html' && !turma.includes('Terça')) {
+    if (currentFile === 'aprender_terca.html' && !turma.includes('Terça-Feira')) {
         window.location.href = 'index.html';
         return false;
     }
-    if (currentFile === 'aprender_quarta.html' && !turma.includes('Quarta')) {
+    if (currentFile === 'aprender_quarta.html' && !turma.includes('Quarta-Feira')) {
         window.location.href = 'index.html';
         return false;
     }
-    if (currentFile === 'aprender_quinta.html' && !turma.includes('Quinta')) {
+    if (currentFile === 'aprender_quinta.html' && !turma.includes('Quinta-Feira')) {
         window.location.href = 'index.html';
         return false;
     }
-    if (currentFile === 'informatica.html' && !turma.includes('Informática')) {
+    if (currentFile === 'informatica.html' && turma !== 'Informática Básica (Curitiba)') {
         window.location.href = 'index.html';
         return false;
     }
-    if (currentFile === 'ingles.html' && !turma.includes('Inglês')) {
+    if (currentFile === 'ingles.html' && turma !== 'Inglês Básico (Curitiba)') {
         window.location.href = 'index.html';
         return false;
     }
-    if (currentFile === 'robotica.html' && !turma.includes('Robótica') && !turma.includes('Informática II')) {
+    if (currentFile === 'robotica.html' && turma !== 'Informática II - Robótica (Curitiba)') {
+        window.location.href = 'index.html';
+        return false;
+    }
+    if (currentFile === 'ingles_joinville.html' && turma !== 'Inglês Básico (Joinville)') {
+        window.location.href = 'index.html';
+        return false;
+    }
+    if (currentFile === 'ingles_pomerode.html' && turma !== 'Inglês Básico (Pomerode)') {
+        window.location.href = 'index.html';
+        return false;
+    }
+    if (currentFile === 'informatica_joinville.html' && turma !== 'Informática Básica (Joinville)') {
         window.location.href = 'index.html';
         return false;
     }
