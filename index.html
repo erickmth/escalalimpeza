@@ -440,10 +440,14 @@
                         <option value="" disabled selected>Selecione sua turma</option>
                         <option value="Formare 2026">Formare 2026</option>
                         <option value="Aprender A+ (Terça-Feira)">Aprender A+ (Terça-Feira)</option>
-                        <option value="Aprender A+ (Quarta-Feira)">Aprender A+ (Quarta-Feira)</option>
+                        <option value="Aprender A+ (Segunda-Feira)">Aprender A+ (Segunda-Feira)</option>
                         <option value="Aprender A+ (Quinta-Feira)">Aprender A+ (Quinta-Feira)</option>
                         <option value="Informática Básica (Curitiba)">Informática Básica (Curitiba)</option>
                         <option value="Inglês Básico (Curitiba)">Inglês Básico (Curitiba)</option>
+                        <option value="Informática II - Robótica (Curitiba)">Informática II - Robótica (Curitiba)</option>
+                        <option value="Inglês Básico (Joinville)">Inglês Básico (Joinville)</option>
+                        <option value="Inglês Básico (Pomerode)">Inglês Básico (Pomerode)</option>
+                        <option value="Informática Básica (Joinville)">Informática Básica (Joinville)</option>
                     </select>
                 </div>
                 
@@ -551,10 +555,14 @@
             const turmasValidas = [
                 'Formare 2026',
                 'Aprender A+ (Terça-Feira)',
-                'Aprender A+ (Quarta-Feira)',
+                'Aprender A+ (Segunda-Feira)',
                 'Aprender A+ (Quinta-Feira)',
                 'Informática Básica (Curitiba)',
-                'Inglês Básico (Curitiba)'
+                'Inglês Básico (Curitiba)',
+                'Informática II - Robótica (Curitiba)',
+                'Inglês Básico (Joinville)',
+                'Inglês Básico (Pomerode)',
+                'Informática Básica (Joinville)'
             ];
             return turmasValidas.includes(turma) ? turma : null;
         }
@@ -731,10 +739,14 @@
                     let page = 'index.html';
                     if (turmaValida === 'Formare 2026') page = 'formare.html';
                     else if (turmaValida === 'Aprender A+ (Terça-Feira)') page = 'aprender_terca.html';
-                    else if (turmaValida === 'Aprender A+ (Quarta-Feira)') page = 'aprender_quarta.html';
+                    else if (turmaValida === 'Aprender A+ (Segunda-Feira)') page = 'aprender_quarta.html';
                     else if (turmaValida === 'Aprender A+ (Quinta-Feira)') page = 'aprender_quinta.html';
                     else if (turmaValida === 'Informática Básica (Curitiba)') page = 'informatica.html';
                     else if (turmaValida === 'Inglês Básico (Curitiba)') page = 'ingles.html';
+                    else if (turmaValida === 'Informática II - Robótica (Curitiba)') page = 'robotica.html';
+                    else if (turmaValida === 'Inglês Básico (Joinville)') page = 'ingles_joinville.html';
+                    else if (turmaValida === 'Inglês Básico (Pomerode)') page = 'ingles_pomerode.html';
+                    else if (turmaValida === 'Informática Básica (Joinville)') page = 'informatica_joinville.html';
                     
                     setTimeout(() => {
                         window.location.href = page;
