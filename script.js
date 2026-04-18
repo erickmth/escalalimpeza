@@ -117,7 +117,7 @@ async function login(event) {
             let page = '';
             if (turma.includes('Formare 2026')) page = 'formare.html';
             else if (turma.includes('Terça-Feira')) page = 'aprender_terca.html';
-            else if (turma.includes('Quarta-Feira')) page = 'aprender_quarta.html';
+            else if (turma.includes('Segunda-Feira')) page = 'aprender_quarta.html';
             else if (turma.includes('Quinta-Feira')) page = 'aprender_quinta.html';
             else if (turma === 'Informática Básica (Curitiba)') page = 'informatica.html';
             else if (turma === 'Inglês Básico (Curitiba)') page = 'ingles.html';
@@ -295,7 +295,7 @@ function checkAccess() {
         window.location.href = 'index.html';
         return false;
     }
-    if (currentFile === 'aprender_quarta.html' && !turma.includes('Quarta-Feira')) {
+    if (currentFile === 'aprender_quarta.html' && !turma.includes('Segunda-Feira')) {
         window.location.href = 'index.html';
         return false;
     }
