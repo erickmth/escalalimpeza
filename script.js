@@ -119,12 +119,7 @@ async function login(event) {
             else if (turma.includes('Terça-Feira')) page = 'aprender_terca.html';
             else if (turma.includes('Segunda-Feira')) page = 'aprender_quarta.html';
             else if (turma.includes('Quinta-Feira')) page = 'aprender_quinta.html';
-            else if (turma === 'Informática Básica (Curitiba)') page = 'informatica.html';
             else if (turma === 'Inglês Básico (Curitiba)') page = 'ingles.html';
-            else if (turma === 'Informática II - Robótica (Curitiba)') page = 'robotica.html';
-            else if (turma === 'Inglês Básico (Joinville)') page = 'ingles_joinville.html';
-            else if (turma === 'Inglês Básico (Pomerode)') page = 'ingles_pomerode.html';
-            else if (turma === 'Informática Básica (Joinville)') page = 'informatica_joinville.html';
             else page = 'escala.html';
             
             window.location.href = page;
