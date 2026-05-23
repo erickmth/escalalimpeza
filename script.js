@@ -148,6 +148,71 @@ async function login(event) {
 }
 
 // ==================== CARREGAR ESCALA ====================
+function parseDatePart(text, currentYear) {
+    const match = text.match(/(\d{1,2})[\/\-](\d{1,2})(?:[\/\-](\d{2,4}))?/);
+    if (!match) return null;
+
+    let day = parseInt(match[1], 10);
+    let month = parseInt(match[2], 10) - 1;
+    let year = match[3] ? parseInt(match[3], 10) : currentYear;
+
+    if (year < 100) {
+        year += year < 50 ? 2000 : 1900;
+    }
+
+    return new Date(year, month, day);
+}
+
+function parseScheduleDates(semanalabel) {
+    if (!semanalabel || typeof semanalabel !== 'string') return null;
+
+    const rangePart = semanalabel.split(':').slice(1).join(':').trim();
+    const datesText = rangePart || semanalabel;
+    const parts = datesText.split('-').map(part => part.trim());
+
+    if (parts.length < 2) return null;
+
+    const now = new Date();
+    const currentYear = now.getFullYear();
+    const start = parseDatePart(parts[0], currentYear);
+    let end = parseDatePart(parts[1], currentYear);
+
+    if (!start || !end) return null;
+    if (end < start) {
+        end = new Date(start.getFullYear() + 1, end.getMonth(), end.getDate());
+    }
+
+    return { start, end };
+}
+
+function findActiveSchedule(scheduleItems) {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    const validItems = scheduleItems.filter(item => item.dates);
+    if (!validItems.length) {
+        return scheduleItems[0] || null;
+    }
+
+    const pastOrCurrent = validItems.filter(item => item.dates.start <= today);
+    if (pastOrCurrent.length) {
+        return pastOrCurrent.reduce((latest, item) => {
+            return item.dates.start > latest.dates.start ? item : latest;
+        });
+    }
+
+    return validItems.reduce((earliest, item) => {
+        return item.dates.start < earliest.dates.start ? item : earliest;
+    });
+}
+
+function normalizeSemanaAtual(semanaAtual) {
+    if (!semanaAtual || typeof semanaAtual !== 'string') return '';
+    const match = semanaAtual.match(/Semana\s*\d+/i);
+    if (match) return match[0];
+    return semanaAtual.split(':')[0].trim();
+}
+
 async function loadScheduleData(turma) {
     // Turmas que NÃO têm escala (Robótica)
     const turmasSemEscala = [
@@ -196,16 +261,24 @@ async function loadScheduleData(turma) {
         }
         
         const currentWeekEl = document.getElementById('currentWeek');
+        const scheduleItems = data.duplas.map((item, index) => ({
+            ...item,
+            index,
+            dates: parseScheduleDates(item.semana)
+        }));
+        const activeSchedule = findActiveSchedule(scheduleItems);
+        const activeLabel = activeSchedule ? normalizeSemanaAtual(activeSchedule.semana) : normalizeSemanaAtual(data.semana_atual);
+
         if (currentWeekEl) {
-            currentWeekEl.textContent = data.semana_atual || 'Carregando...';
+            currentWeekEl.textContent = activeLabel || 'Carregando...';
         }
         
         const tbody = document.querySelector('#scheduleTable tbody');
         if (tbody) {
-            if (data.duplas && data.duplas.length > 0) {
+            if (scheduleItems.length > 0) {
                 tbody.innerHTML = '';
                 
-                data.duplas.forEach(item => {
+                scheduleItems.forEach(item => {
                     const row = document.createElement('tr');
                     const semanaCell = document.createElement('td');
                     semanaCell.textContent = item.semana;
@@ -215,8 +288,7 @@ async function loadScheduleData(turma) {
                     
                     row.append(semanaCell, duplaCell);
                     
-                    if (item.semana === data.semana_atual || 
-                        (data.semana_atual && item.semana.startsWith(data.semana_atual.split(':')[0]))) {
+                    if (activeSchedule && item.index === activeSchedule.index) {
                         row.style.cssText = 'background-color: #e3f2fd; font-weight: bold;';
                     }
                     
